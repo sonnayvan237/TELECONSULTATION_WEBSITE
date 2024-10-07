@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./../css/consultation_option.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>Consultation</title>
+</head>
+
+<body>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-15 d-flex">
+                <img id="medecinAvatar" src="" alt="Avatar du médecin" class="rounded-circle images">
+                <div class="profil">
+                    <h1 id="medecinNom" class="fw-bold"></h1>
+                    <p id="medecinAge"></p>
+                    <p id="medecinSpecialite"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="consulter">
+        <h2 class="pb-4 pt-5 text-center text-white fw-bold">Faites-vous consulter par notre spécialiste:</h2>
+        <div class="text-center mt-4">
+            <a href="#" class="me-5 p-2 rounded">
+                <i class='bx bx-video'></i>
+                Appel vidéo
+            </a>
+            <a href="#" class="ms-5 p-2 rounded">
+                <i class='bx bx-phone-call'></i>
+                Appel audio
+            </a>
+        </div>
+    </div>
+
+    <div class="prise_rendezvous pt-5">
+        <h2 class="pb-4 text-white fw-bold">Calendrier des Rendez-vous:</h2>
+        
+        <!-- Calendrier -->
+        <table id="calendar">
+            <thead>
+                <tr>
+                    <th>Heure</th>
+                    <th>Lundi</th>
+                    <th>Mardi</th>
+                    <th>Mercredi</th>
+                    <th>Jeudi</th>
+                    <th>Vendredi</th>
+                </tr>
+            </thead>
+            <tbody id="calendar-body">
+                <!-- Les horaires seront générés par JavaScript -->
+            </tbody>
+        </table>
+    
+        <!-- Formulaire de Réservation -->
+        <h2 class="pb-4 pt-4 text-white fw-bold">Réserver un Rendez-vous</h2>
+        <form id="appointment-form" class="pb-5">
+
+            <div>
+                <label for="doctor" class="fw-bold">Médecin:</label>
+                <!-- Le nom du médecin sera affiché ici, plus de liste déroulante -->
+                <input type="text" id="doctor" readonly class="fw-bold">
+            </div>
+
+            <div>
+                <label for="day" class="fw-bold">Jour:</label>
+                <select id="day" class="fw-bold" required>
+                    <option value="lundi">Lundi</option>
+                    <option value="mardi">Mardi</option>
+                    <option value="mercredi">Mercredi</option>
+                    <option value="jeudi">Jeudi</option>
+                    <option value="vendredi">Vendredi</option>
+                </select><br>
+            </div>
+            
+            <div>
+                <label for="time" class="fw-bold">Heure:</label>
+                <input type="time" id="time" class="fw-bold" required><br>
+            </div>
+            <button type="submit" class="text-center fw-bold p-2">Réserver</button>
+        </form>
+    </div>
+
+    <script>
+        // Récupérer les paramètres de l'URL pour obtenir l'ID du médecin
+        const urlParams = new URLSearchParams(window.location.search);
+        const medecinId = urlParams.get('id');
+
+        // Simuler les données des médecins
+        const utilisateurs = [
+        {id: 1, nom: "Dupont Jean", age: 35, avatar: "./../images/freepik-export-20240918113302blBh.jpeg", specialite: "Cardiologue"},
+        {id: 2, nom: "Anne Marie", age: 29, avatar: "./../images/freepik-export-20240918113332cp2D.jpeg", specialite: "Dermatologue"},
+        {id: 3, nom: "Bernard Luc", age: 41, avatar: "./../images/freepik-export-20240918113426uFCd.jpeg", specialite: "Généraliste"},
+        {id: 4, nom: "Leclerc Sophie", age: 38, avatar: "./../images/freepik-export-20240918113400Oixm.jpeg" , specialite: "Neurologue"},
+        {id: 5, nom: "Stephanie Flore", age: 45, avatar: "./../images/freepik-export-20240918113509gzer.jpeg", specialite: "Orthopédiste"},
+        {id: 6, nom: "Moreau Claire", age: 32, avatar: "./../images/freepik-export-20240918113549sG7P.jpeg", specialite: "Pédiatre"},
+        {id: 7, nom: "Lefevre Marc", age: 36, avatar: "./../images/freepik-export-20240918113612OLMy.jpeg", specialite: "Ophtalmologue"},
+        {id: 8, nom: "Lambert Julienne", age: 50, avatar: "./../images/freepik-export-20240918114855VAqE.jpeg", specialite: "Neurologue"},
+        {id: 9, nom: "Girard Isabelle", age: 39, avatar:"./../images/freepik-export-20240918114921xym3.jpeg", specialite: "Psychiatre"},
+        {id: 10, nom: "Dubois Claire", age: 29, avatar:"./../images/freepik-export-20240918114944NnHK.jpeg", specialite: "Dermatologue"},
+        {id: 11, nom: "Meghane Brown", age: 42, avatar:"./../images/freepik-export-20240918120132YvhK.jpeg",  specialite: "Cardiologue"},
+        {id: 12, nom: "Thomas Tamo", age: 34, avatar:"./../images/freepik-export-20240918120456eqE7.jpeg",  specialite: "Pédiatre"}
+    ];
+
+        // Trouver le médecin correspondant à l'ID
+        const medecin = utilisateurs.find(user => user.id == medecinId);
+
+        // Afficher les informations du médecin dans la page
+        if (medecin) {
+            document.getElementById("medecinNom").textContent = medecin.nom;
+            document.getElementById("medecinAvatar").src = medecin.avatar;
+            document.getElementById("medecinAge").textContent = `Âge: ${medecin.age} ans`;
+            document.getElementById("medecinSpecialite").textContent = `Spécialité: ${medecin.specialite}`;
+            document.getElementById("doctor").value = medecin.nom; // Affiche le nom dans le formulaire
+        } else {
+            document.getElementById("medecinNom").textContent = "Médecin non trouvé";
+        }
+
+        // Calendrier spécifique au médecin
+        document.addEventListener('DOMContentLoaded', function () {
+            const calendarBody = document.getElementById('calendar-body');
+            const appointmentForm = document.getElementById('appointment-form');
+            
+            const days = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi'];
+            const times = ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00'];
+        
+            // Objet pour stocker les rendez-vous pour chaque médecin
+            let appointments = {
+                [medecin.nom]: []
+            };
+        
+            // Générer le calendrier vide avec les horaires
+            function generateCalendar() {
+                times.forEach(time => {
+                    const row = document.createElement('tr');
+                    const timeCell = document.createElement('td');
+                    timeCell.textContent = time;
+                    row.appendChild(timeCell);
+                    
+                    days.forEach(day => {
+                        const dayCell = document.createElement('td');
+                        dayCell.setAttribute('data-day', day);
+                        dayCell.setAttribute('data-time', time);
+                        dayCell.textContent = ''; // Initialement vide
+                        row.appendChild(dayCell);
+        
+                        // Ajout de l'événement pour annuler un rendez-vous
+                        dayCell.addEventListener('click', function () {
+                            handleCellClick(dayCell);
+                        });
+                    });
+        
+                    calendarBody.appendChild(row);
+                });
+            }
+        
+            // Ajouter un rendez-vous
+            function addAppointment(doctor, day, time) {
+                const appointment = { doctor, day, time };
+                appointments[doctor].push(appointment);
+                displayAppointments(doctor);
+            }
+        
+            // Annuler un rendez-vous
+            function cancelAppointment(doctor, day, time) {
+                appointments[doctor] = appointments[doctor].filter(appointment => appointment.day !== day || appointment.time !== time);
+                displayAppointments(doctor);
+            }
+        
+            // Afficher les rendez-vous pour le médecin sélectionné
+            function displayAppointments(doctor) {
+                // Vider le calendrier
+                document.querySelectorAll('#calendar td').forEach(cell => {
+                    if (cell.getAttribute('data-day')) {
+                        cell.textContent = '';
+                        cell.classList.remove('booked');
+                    }
+                });
+        
+                // Remplir les cases du calendrier avec les rendez-vous du médecin
+                appointments[doctor].forEach(appointment => {
+                    const cell = document.querySelector(
+                        `td[data-day="${appointment.day}"][data-time="${appointment.time}"]`
+                    );
+                    if (cell) {
+                        cell.textContent = appointment.doctor;
+                        cell.classList.add('booked');
+                    }
+                });
+            }
+        
+            // Gérer le clic sur une cellule pour annuler un rendez-vous
+            function handleCellClick(cell) {
+                const day = cell.getAttribute('data-day');
+                const time = cell.getAttribute('data-time');
+        
+                if (cell.classList.contains('booked')) {
+                    const confirmation = confirm("Voulez-vous annuler ce rendez-vous ?");
+                    if (confirmation) {
+                        cancelAppointment(medecin.nom, day, time);
+                    }
+                }
+            }
+        
+            // Valider si l'heure est déjà réservée
+            function isTimeSlotAvailable(doctor, day, time) {
+                return !appointments[doctor].some(appointment => appointment.day === day && appointment.time === time);
+            }
+        
+            // Soumettre le formulaire de réservation
+            appointmentForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+        
+                const day = document.getElementById('day').value;
+                const time = document.getElementById('time').value;
+        
+                // Validation : Vérifier si le créneau est déjà pris
+                if (!isTimeSlotAvailable(medecin.nom, day, time)) {
+                    alert("Ce créneau est déjà réservé. Veuillez en choisir un autre.");
+                    return;
+                }
+        
+                addAppointment(medecin.nom, day, time);
+                appointmentForm.reset();
+            });
+        
+            // Générer le calendrier au chargement de la page
+            generateCalendar();
+        });
+    </script>
+
+</body>
+
+</html>

@@ -13,24 +13,25 @@
 
 <body class="ms-5 me-5">
     <h3 class="text-center text-white fw-bold pt-4 pb-4 fs-1">Nos spécialistes: </h3>
-    <p class="text-center text-white fw-bold fs-5 libelle mb-5">Nous mettons à votre disposition des médecins généralistes professionnels de santé
-        polyvalent qui assure la prise en charge globale des
-        patients, quel que soit leur âge ou leur pathologie. Il joue un rôle clé dans la prévention, le diagnostic et le
-        suivi des maladies courantes. Accessible et à l'écoute, il accompagne les patients tout au long de leur
-        parcours
-        de santé.
-    </p>
+    <p class="text-center text-white fw-bold fs-5 libelle mb-5">Un médecin spécialiste est un professionnel de santé qui a suivi une formation approfondie dans un domaine médical
+    spécifique, lui permettant de diagnostiquer et de traiter des pathologies complexes. Grâce à son expertise, il apporte
+    des soins adaptés et personnalisés en fonction des besoins spécifiques de chaque patient.</p>
     <div class="card-container" id="cardContainer" ></div>
     <script>
         // Tableau de données des utilisateurs avec un chemin vers leur page de consultation
         const utilisateurs = [
-            {id: 1, nom: "Dupont Jean", age: 35, avatar: "./images/freepik-export-20240918113400Oixm.jpeg", spécialité: "Cardiologue"},
-            {id: 2, nom: "Martin Marie", age: 29, spécialité: "Dermatologue"},
-            {id: 3, nom: "Bernard Luc", age: 41, spécialité: "Généraliste"},
-            {id: 4, nom: "Leclerc Sophie", age: 38, spécialité: "Neurologue"},
-            {id: 5, nom: "Petit Alain", age: 45, spécialité: "Orthopédiste"},
-            {id: 6, nom: "Moreau Claire", age: 32, spécialité: "Pédiatre"},
-            {id: 7, nom: "Lefevre Marc", age: 36, spécialité: "Ophtalmologue"},
+            {id: 1, nom: "Dupont Jean", age: 35, avatar: "./images/freepik-export-20240918113302blBh.jpeg", specialite: "Cardiologue",},
+            {id: 2, nom: "Anne Marie", age: 29, avatar: "./images/freepik-export-20240918113332cp2D.jpeg", specialite: "Dermatologue"},
+            {id: 3, nom: "Bernard Luc", age: 41, avatar: "./images/freepik-export-20240918113426uFCd.jpeg", specialite: "Généraliste"},
+            {id: 4, nom: "Leclerc Sophie", age: 38, avatar: "./images/freepik-export-20240918113400Oixm.jpeg" , specialite: "Neurologue"},
+            {id: 5, nom: "Stephanie Flore", age: 45, avatar: "./images/freepik-export-20240918113509gzer.jpeg", specialite: "Orthopédiste"},
+            {id: 6, nom: "Moreau Claire", age: 32, avatar: "./images/freepik-export-20240918113549sG7P.jpeg", specialite: "Pédiatre"},
+            {id: 7, nom: "Lefevre Marc", age: 36, avatar: "./images/freepik-export-20240918113612OLMy.jpeg", specialite: "Ophtalmologue"},
+            {id: 8, nom: "Lambert Julienne", age: 50, avatar: "./images/freepik-export-20240918114855VAqE.jpeg", specialite: "Neurologue"},
+            {id: 9, nom: "Girard Isabelle", age: 39, avatar:"./images/freepik-export-20240918114921xym3.jpeg", specialite: "Psychiatre"},
+            {id: 10, nom: "Dubois Claire", age: 29, avatar:"./images/freepik-export-20240918114944NnHK.jpeg", specialite: "Dermatologue"},
+            {id: 11, nom: "Meghane Brown", age: 42, avatar:"./images/freepik-export-20240918120132YvhK.jpeg",  specialite: "Cardiologue"},
+            {id: 12, nom: "Thomas Tamo", age: 34, avatar:"./images/freepik-export-20240918120456eqE7.jpeg",  specialite: "Pédiatre"}
         ];
 
         // Sélection du conteneur pour afficher les cartes
@@ -68,7 +69,7 @@
             consulterButton.classList.add("btn-consult");
 
              // Ajouter un événement onclick pour rediriger vers la page consultation_option.html avec des paramètres
-        consulterButton.onclick = () => {
+            consulterButton.onclick = () => {
             window.location.href = `./pages/consultation_option.html?id=${utilisateur.id}`;
         };
             card.appendChild(consulterButton);

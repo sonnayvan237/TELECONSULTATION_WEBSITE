@@ -50,36 +50,38 @@
         // Sélection du conteneur pour afficher les cartes
         const cardContainer = document.getElementById("cardContainer");
 
-        // Parcourir le tableau et créer une carte pour chaque examen
-        examens.forEach(examen => {
-            // Création de la div de la carte
-            const card = document.createElement("div");
-            card.classList.add("card");
+       // Parcourir le tableau et créer une carte pour chaque examen
+examens.forEach(examen => {
+    // Création de la div de la carte
+    const card = document.createElement("div");
+    card.classList.add("card");
 
-            // Création de l'avatar
-            const avatar = document.createElement("img");
-            avatar.src = examen.avatar;
-            card.appendChild(avatar);
+    // Création de l'avatar
+    const avatar = document.createElement("img");
+    avatar.src = examen.avatar;
+    card.appendChild(avatar);
 
-            // Ajout du nom de l'examen
-            const nom = document.createElement("h4");
-            nom.textContent = examen.nom;
-            card.appendChild(nom);
+    // Ajout du nom de l'examen
+    const nom = document.createElement("h4");
+    nom.textContent = examen.nom;
+    card.appendChild(nom);
 
-            // Ajout du bouton "payer"
-            const payerButton = document.createElement("button");
-            payerButton.textContent = "payer";
-            payerButton.classList.add("btn-payer");
+    // Ajout du bouton "payer"
+    const payerButton = document.createElement("button");
+    payerButton.textContent = "Payer";
+    payerButton.classList.add("btn-payer");
 
-             // Ajouter un événement onclick pour rediriger vers la page consultation_option.html avec des paramètres
-            payerButton.onclick = () => {
-            window.location.href = `./pages/consultation_option.html?id=${examen.id}`;
-        };
-            card.appendChild(payerButton);
+    // Ajouter un événement onclick pour rediriger vers consultation_option.html avec des paramètres
+    payerButton.onclick = () => {
+        window.location.href = `./pages/exams_option.html?id=${examen.id}`;
+    };
+    
+    card.appendChild(payerButton);
 
-            // Ajouter la carte au conteneur
-            cardContainer.appendChild(card);
-        });
+    // Ajouter la carte au conteneur
+    cardContainer.appendChild(card);
+});
+
     </script>
 </body>
 </html>

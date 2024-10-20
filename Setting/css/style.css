@@ -8,6 +8,8 @@
 
 body{
     background-image: url(./../images/pexels-karolina-grabowska-4386464.jpg);
+    background-size: cover; /* Couvre toute la page */
+    background-attachment: fixed; /* Fixe l'image lors du défilement */ 
 }
 .setting_body{
    text-align: center;

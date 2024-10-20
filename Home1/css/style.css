@@ -8,8 +8,8 @@
 }
 /* navigation bar */
 .nav-item a{
-   padding-left: 40px;
-   padding-right: 40px;
+   padding-left: 20px;
+   padding-right: 20px;
    font-weight: bold;
 }
 
@@ -18,7 +18,7 @@
 }
 
 .nav{
-    margin-left: 150px;
+    margin-left: 130px;
 }
 
 .user a{
@@ -308,6 +308,15 @@
     margin-top: 20px;
     font-size: 14px;
     color: #666;
+}
+
+.row{
+    margin: 0% !important;
+}
+.consult_link{
+    display: flex;
+    flex-direction: row;
+    margin-left: 36%;
 }
 
 

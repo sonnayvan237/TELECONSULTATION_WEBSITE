@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Roboto:wght@100;300;400;500&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "poppins", sans-serif;
+}
+
+.icon {
+    cursor: pointer;
+}
+
+body{
+    background-image: url(./../images/pexels-karolina-grabowska-4386464.jpg); 
+    background-size: cover; /* Couvre toute la page */
+    background-attachment: fixed; /* Fixe l'image lors du défilement */ 
+}
+
+table {
+    background-color: rgba(255, 255, 255, 0) !important; /* Table transparente */
+}
+
+th, td {
+    background-color: rgba(255, 255, 255, 0.1) !important; /* Cellules légèrement transparentes */
+    border: 1px solid rgba(59, 59, 59, 0.3) !important; /* Bordures transparentes */
+    color: #fff; /* Couleur du texte visible */
+}
+
+th {
+    font-weight: bold !important; /* Style des en-têtes pour rester visible */
+}
+
+tbody {
+    background-color: rgba(255, 255, 255, 0) !important; /* Corps du tableau entièrement transparent */
+}
+
+.mb-3 input{
+    background: transparent !important;
+    border: 2px solid rgba(59, 59, 59, 0.3);
+}
+
+.searchbar{
+    width: 30% !important; 
+}
+
+.input-box input{
+    background: transparent;
+    border: 2px solid rgba(36, 35, 35, 0.3);
+}
+.input-box{
+    display: flex;
+    flex-direction: row;
+}
+
+.bx-search:before {
+    position: relative;
+    right: 500px;
+    top: 13px;
+    content: "\ebf7";
+}

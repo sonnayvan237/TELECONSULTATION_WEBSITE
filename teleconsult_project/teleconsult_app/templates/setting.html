@@ -1,11 +1,12 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Setting</title>
-    <link rel="stylesheet" href="./../Setting/css/style.css">
-    <link rel="stylesheet" href="./../Setting/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/setting.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body class="setting_body"> 
@@ -73,7 +74,7 @@
         </div>
         <div class="d-flex">
             <i class="fa-solid fa-flask-vial" style="color: #000000;"></i>
-            <a href="./../EXAMNS_PAGE/exams.html"> recherche de laboratoire</a>
+            <a href="{% url 'exams' %}"> recherche de laboratoire</a>
         </div>
         <div class="d-flex">
             <i class="fa-solid fa-prescription-bottle-medical" style="color: #000000;"></i>
@@ -81,7 +82,7 @@
         </div>
         <div class="d-flex">
             <i class="fa-solid fa-address-card" style="color: #000000;"></i>
-            <a href="./../about_me/about.html"> A propos de nous</a>
+            <a href="{% url 'about' %}"> A propos de nous</a>
         </div>
         <div class="d-flex">
             <i class="fa-solid fa-hands-holding" style="color: #000000;"></i>

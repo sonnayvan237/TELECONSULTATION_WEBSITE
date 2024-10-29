@@ -1,6 +1,8 @@
-from django.shortcuts import render,HttpResponse
+from django.shortcuts import render,HttpResponse,redirect
+from .models import Medecins,Exams
 
-# Create your views here.
+######################
+#definition des root de toutes les pages
 def about(request):
     return render(request, 'about.html')
 
@@ -24,13 +26,14 @@ def consultation_option_specialiste(request):
 
 def contact(request):
     return render(request, 'contact_us.html')
-    # return HttpResponse(str([1,3,4]))
+    
 
 def exams_option(request):
     return render(request, 'exams_option.html')
 
 def exams(request):
-    return render(request, 'exams.html')
+    exams = Exams.objects.all()
+    return render(request, 'exams.html', {'exams': exams})
 
 def historique(request):
     return render(request, 'historique.html')
@@ -60,9 +63,108 @@ def setting(request):
     return render(request, 'setting.html')
 
 def soumis_ordonnance(request):
-    return render(request, 'soumis_ordonnance.html')
+    return render(request, 'soumission_ordonnance.html')
+
+#######################
+# operation d'ajout, de modification et de suppression des medecin
+def add_or_update_medecin(request, id=None):
+    if id:  # Si un ID est passé, on récupère le médecin pour la modification
+        medecin = Medecins.objects.get(id=id)
+    else:  # Sinon, c'est un ajout
+        medecin = None
+    
+    if request.method == 'POST':
+        # Récupération des données du formulaire
+        nom = request.POST.get('nom')
+        specialite = request.POST.get('specialite')
+        email = request.POST.get('email')
+        photo = request.POST.get('photo')
+        
+        
+        if nom and specialite and email:
+            if medecin:  # Si on modifie un médecin existant
+                medecin.nom = nom
+                medecin.specialite = specialite
+                medecin.email = email
+                medecin.save()  # Sauvegarde des modifications
+            else:  # Sinon, on ajoute un nouveau médecin
+                Medecins.objects.create(nom=nom, specialite=specialite, email=email, photo=photo)
+
+            return redirect('add_medecin')  # Redirection vers la liste après l'ajout ou la modification
+    
+    # Récupérer tous les médecins pour l'affichage dans le tableau
+    medecins = Medecins.objects.all()
+    return render(request, 'ajout_medecin.html', {'medecins': medecins, 'medecin': medecin})
+
+def delete_medecin(request, id):
+    remove = Medecins.objects.get(id=id)
+    if remove:
+        remove.delete()
+        return redirect('add_medecin')
+    return render(request, "",{'id':remove})
+
+def update_medecin(request, id):
+        update = Medecins.objects.get(id=id)
+        if request.method  == 'POST':
+            update.nom = request.POST.get('nom')
+            update.specialite = request.POST.get('specialite')
+            update.email = request.POST.get('email')
+            update.photo = request.POST.get('photo')
+            update.save()
+            return redirect("add_medecin")
+        return render(request, 'ajout_medecin.html', {'medecin' : update}) 
+    
+#######################
+#page d'ajout, de modifications et de suppression des examens
+def add_or_update_exams(request, id=None):
+    if id:  # Si un ID est passé, on récupère l'examen pour la modification
+        exam = Exams.objects.get(id=id)
+    else:  # Sinon, c'est un ajout
+        exam = None
+    
+    if request.method == 'POST':
+        # Récupération des données du formulaire
+        nom = request.POST.get('nom')
+        prix = request.POST.get('prix')
+        photo = request.POST.get('photo')
+        
+        
+        if nom and prix :
+            if exam:  # Si on modifie un examen existant
+                exam.nom = nom
+                exam.prix = prix
+                exam.photo = photo
+                exam.save()  # Sauvegarde des modifications
+            else:  # Sinon, on ajoute un nouveau médecin
+                Exams.objects.create(nom=nom, prix=prix, photo =photo)
+
+            return redirect('add_exam')  # Redirection vers la liste après l'ajout ou la modification
+    
+    # Récupérer tous les médecins pour l'affichage dans le tableau
+    exams = Exams.objects.all()
+    return render(request, 'ajout_exam.html', {'exams': exams, 'exam': exam})
+
+def delete_exam(request, id):
+    remove = Exams.objects.get(id=id)
+    if remove:
+        remove.delete()
+        return redirect('add_exam')
+    return render(request, "",{'id':remove})
+
+def update_exam(request, id):
+        update = Exams.objects.get(id=id)
+        if request.method  == 'POST':
+            update.nom = request.POST.get('nom')
+            update.prix = request.POST.get('prix')
+            update.photo = request.POST.get('photo')
+            update.save()
+            return redirect("add_exam")
+        return render(request, 'ajout_exam.html', {'exam' : update}) 
+    
 
 
+#######################
+# page d'acceuil
 def home(request):
     services = [
         {

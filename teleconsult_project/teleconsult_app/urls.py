@@ -23,6 +23,16 @@ urlpatterns = [
     path('register/', views.register, name='register'), 
     path('setting/', views.setting, name='setting'),
     path('soumission_ordonnance/', views.soumis_ordonnance, name='soumission_ordonnance'), 
+    ######################
+    #action sur le medecin
+    path("add_medecin/", views.add_or_update_medecin, name="add_medecin"),
+    path("update_medecin/<int:id>/", views.add_or_update_medecin, name="update_medecin"), 
+    path("delete_medecin/<int:id>/", views.delete_medecin, name="delete_medecin"),
+    ######################
+    #action sur l'examen
+    path("add_exam/", views.add_or_update_exams, name="add_exam"),
+    path("update_exam/<int:id>/", views.add_or_update_exams, name="update_exam"), 
+    path("delete_exam/<int:id>/", views.delete_exam, name="delete_exam"),
     
     # Ajoutez d'autres URL ici
 ]

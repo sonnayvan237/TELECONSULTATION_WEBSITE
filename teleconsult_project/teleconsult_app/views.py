@@ -1,4 +1,4 @@
-from django.shortcuts import render,HttpResponse,redirect
+from django.shortcuts import render,HttpResponse,redirect,get_object_or_404
 from .models import Medecins,Exams
 
 ######################
@@ -28,8 +28,26 @@ def contact(request):
     return render(request, 'contact_us.html')
     
 
-def exams_option(request):
-    return render(request, 'exams_option.html')
+def exams_option(request, id):   
+    element = Exams.objects.get(id=id)
+    exams = Exams.objects.all()    
+    return render(request, 'exams_option.html', {'element':element, 'exams': exams})
+
+def deplacement(request, id):
+    element = Exams.objects.get(id=id)
+    if request.method == "POST":
+        deplacement = 'labo_switch' in request.POST # Vérifier si la checkbox est cochée
+        if deplacement == False:
+            element = Exams.objects.get(id=id)
+            exams = Exams.objects.all()    
+            return redirect('deplacement', id=id) 
+                 
+        element.deplacement = 2000 if deplacement else 0  # Met à jour le montant de déplacement
+        element.total = element.prix + element.deplacement  # Calcule le total
+        element.save()  # Enregistre les modifications
+        return redirect('exams_option', id=id)  # Redirige après la sauvegarde
+
+    return render(request, 'exams_option.html', {'element':element})
 
 def exams(request):
     exams = Exams.objects.all()

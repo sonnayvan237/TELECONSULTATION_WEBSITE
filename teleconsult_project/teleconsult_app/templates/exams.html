@@ -34,7 +34,7 @@
                                 <img src="{% static 'images/' %}{{ exam.photo }}" class="card-img-top" alt="{{ exam.nom }}">
                                 <div class="card-body">
                                     <h4 class="card-title">{{ exam.nom }}</h4>
-                                    <a href="{% url 'exams_option' %}" class="btn btn-primary btn-payer">Payer</a>
+                                    <a href="{% url 'exams_option' exam.id %}" class="btn btn-primary btn-payer">Payer</a>
                                 </div>
                             </div>
                         </div>

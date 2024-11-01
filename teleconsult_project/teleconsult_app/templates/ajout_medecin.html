@@ -25,7 +25,8 @@
             <input type="text" id="nomInput" placeholder="Nom et prénom" class="form-control" name="nom" value="{{medecin.nom}}">
             <input type="text" id="specialiteInput" placeholder="Spécialité" class="form-control mt-4" name="specialite" value="{{medecin.specialite}}">
             <input type="text" id="emailInput" placeholder="Email" class="form-control mt-4" name="email" value="{{medecin.email}}">
-            <input class="form-control mt-4" id="formFileLg" type="file" name="photo" placeholder="Photo de profil" >
+            <input type="text" id="ageInput" placeholder="Age" class="form-control mt-4" name="age" value="{{medecin.age}}">
+            <input class="form-control mt-4" id="formFileLg" type="file" name="photo" placeholder="Photo de profil" value="{{medecin.photo}}" >
             <button class="btn btn-primary mt-4 d-grid mx-auto fw-bold" type="submit">
             {% if medecin %}
                 modifier 

@@ -1,11 +1,12 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spécialistes</title>
-    <link rel="stylesheet" href="./../SPECIALISTE/css/style.css">
-    <link rel="stylesheet" href="./../SPECIALISTE/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/specialiste.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
 </head>
@@ -15,67 +16,29 @@
     <p class="text-center text-white fw-bold fs-5 libelle mb-5">Un médecin spécialiste est un professionnel de santé qui a suivi une formation approfondie dans un domaine médical
     spécifique, lui permettant de diagnostiquer et de traiter des pathologies complexes. Grâce à son expertise, il apporte
     des soins adaptés et personnalisés en fonction des besoins spécifiques de chaque patient.</p>
-    <div class="card-container" id="cardContainer" ></div>
-    <script>
-        // Tableau de données des utilisateurs avec un chemin vers leur page de consultation
-        const utilisateurs = [
-            {id: 1, nom: "Dupont Jean", age: 35, avatar: "./images/freepik-export-20240918113302blBh.jpeg", specialite: "Cardiologue",},
-            {id: 2, nom: "Anne Marie", age: 29, avatar: "./images/freepik-export-20240918113332cp2D.jpeg", specialite: "Dermatologue"},
-            {id: 3, nom: "Bernard Luc", age: 41, avatar: "./images/freepik-export-20240918113426uFCd.jpeg", specialite: "Généraliste"},
-            {id: 4, nom: "Leclerc Sophie", age: 38, avatar: "./images/freepik-export-20240918113400Oixm.jpeg" , specialite: "Neurologue"},
-            {id: 5, nom: "Stephanie Flore", age: 45, avatar: "./images/freepik-export-20240918113509gzer.jpeg", specialite: "Orthopédiste"},
-            {id: 6, nom: "Moreau Claire", age: 32, avatar: "./images/freepik-export-20240918113549sG7P.jpeg", specialite: "Pédiatre"},
-            {id: 7, nom: "Lefevre Marc", age: 36, avatar: "./images/freepik-export-20240918113612OLMy.jpeg", specialite: "Ophtalmologue"},
-            {id: 8, nom: "Lambert Julienne", age: 50, avatar: "./images/freepik-export-20240918114855VAqE.jpeg", specialite: "Neurologue"},
-            {id: 9, nom: "Girard Isabelle", age: 39, avatar:"./images/freepik-export-20240918114921xym3.jpeg", specialite: "Psychiatre"},
-            {id: 10, nom: "Dubois Claire", age: 29, avatar:"./images/freepik-export-20240918114944NnHK.jpeg", specialite: "Dermatologue"},
-            {id: 11, nom: "Meghane Brown", age: 42, avatar:"./images/freepik-export-20240918120132YvhK.jpeg",  specialite: "Cardiologue"},
-            {id: 12, nom: "Thomas Tamo", age: 34, avatar:"./images/freepik-export-20240918120456eqE7.jpeg",  specialite: "Pédiatre"}
-        ];
+    <div class="card-container" id="cardContainer" >
 
-        // Sélection du conteneur pour afficher les cartes
-        const cardContainer = document.getElementById("cardContainer");
-
-        // Parcourir le tableau et créer une carte pour chaque utilisateur
-        utilisateurs.forEach(utilisateur => {
-            // Création de la div de la carte
-            const card = document.createElement("div");
-            card.classList.add("card");
-
-            // Création de l'avatar
-            const avatar = document.createElement("img");
-            avatar.src = utilisateur.avatar;
-            card.appendChild(avatar);
-
-            // Ajout du nom de l'utilisateur
-            const nom = document.createElement("h2");
-            nom.textContent = utilisateur.nom;
-            card.appendChild(nom);
-
-            // Ajout de l'âge de l'utilisateur
-            const age = document.createElement("p");
-            age.textContent = `Âge: ${utilisateur.age} ans`;
-            card.appendChild(age);
-
-              // Ajout du nom de l'utilisateur
-            const specialite = document.createElement("h5");
-            specialite.textContent = utilisateur.specialite;
-            card.appendChild(specialite);
-
-            // Ajout du bouton "Consulter"
-            const consulterButton = document.createElement("button");
-            consulterButton.textContent = "Consulter";
-            consulterButton.classList.add("btn-consult");
-
-             // Ajouter un événement onclick pour rediriger vers la page consultation_option.html avec des paramètres
-            consulterButton.onclick = () => {
-            window.location.href = `./pages/consultation_option.html?id=${utilisateur.id}`;
-        };
-            card.appendChild(consulterButton);
-
-            // Ajouter la carte au conteneur
-            cardContainer.appendChild(card);
-        });
-    </script>
+            <div class="container mb-5">
+                <div class="row "> <!-- Utiliser g-4 pour espacer les cartes -->
+                    {% for medecin in medecins %}
+                    
+                        {% if medecin.specialite != "Généraliste" %}
+                            <div class="col-sm-6 col-md-4 col-lg-3 row-cols-1 g-4"> <!-- Chaque carte prendra une colonne -->
+                                <div class="card h-100">
+                                    <img src="{% static 'images/' %}{{ medecin.photo }}" class="card-img-top" alt="{{ medecin.nom }}">
+                                    <div class="card-body">
+                                        <h2 class="card-title">{{ medecin.nom }}</h2>
+                                        <h5 >{{medecin.specialite}}</h5>
+                                        <a href="{% url 'consultation_option_specialiste' medecin.id %}" class="btn btn-primary btn-consult">Consulter</a>
+                                    </div>
+                                    <div class="line">.</div>
+                                </div>
+                            </div>        
+                        {% endif %}
+                        
+                    {% endfor %}
+                </div>
+            </div>     
+    </div>
 </body>
 </html>

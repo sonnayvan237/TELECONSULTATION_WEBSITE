@@ -8,8 +8,8 @@ urlpatterns = [
     path('specialiste/', views.specialiste, name='specialiste'),
     path('call_généraliste/', views.call_généraliste, name='call_généraliste'), 
     path('call_specialiste/', views.call_specialiste, name='call_specialiste'), 
-    path('consultation_option_généraliste/', views.consultation_option_généraliste, name='consultation_option_généraliste'),
-    path('consultation_option_specialiste/', views.consultation_option_specialiste, name='consultation_option_specialiste'),
+    path('consultation_option_généraliste/<int:id>/', views.consultation, name='consultation_option_généraliste'),
+    path('consultation_option_specialiste/<int:id>/', views.consultation, name='consultation_option_specialiste'),
     path('contact/', views.contact, name='contact'),
     path('exams_option/<int:id>/', views.exams_option, name='exams_option'),
     path('exams/', views.exams, name='exams'),
@@ -24,6 +24,8 @@ urlpatterns = [
     path('setting/', views.setting, name='setting'),
     path('soumission_ordonnance/', views.soumis_ordonnance, name='soumission_ordonnance'), 
     path('deplacement/<int:id>/', views.deplacement, name='deplacement'),
+    path('delete_rendezvous/<int:medecin_id>/<str:jour>/<str:heure>/', views.delete_rendezvous, name='delete_rendezvous'),
+
 
     ######################
     #action sur le medecin

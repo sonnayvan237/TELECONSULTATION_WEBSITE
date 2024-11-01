@@ -10,17 +10,9 @@ body{
     background-image: url(./../images/freepik-export-20240913063949C7YY.jpeg);
 }
 
-.card-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    
-}
-
 .card {
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
+    background-color: #f3f2f2 !important;
+    border-radius:30px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 400px;
     text-align: center;
@@ -28,9 +20,8 @@ body{
 }
 
 .card img {
-    width: 170px;
-    height: 170px;
-    border-radius: 50%;
+    width: 250px;
+    height: 250px;
     margin-bottom: 20px;
 }
 
@@ -61,4 +52,11 @@ body{
 
 .btn-consult:hover {
     background-color: #0056b3;
+}
+
+.line{
+    background-color: #007bff !important;
+    color: blue;
+    width: 100%;
+    margin: 0 !important;    
 }

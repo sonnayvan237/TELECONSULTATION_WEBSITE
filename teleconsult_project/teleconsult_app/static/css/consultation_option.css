@@ -7,10 +7,9 @@
 }
 
 body{
-    background-image: url(./../images/2.jpeg) !important;
+    background-image: url(./../images/pexels-karolina-grabowska-4386464.jpg) !important;
     /* background-repeat: no-repeat !important; */
     background-size:100%;
-    width: 100vw !important; /* Prend 100% de la largeur de la fenêtre */
     height: 100vh !important; /* Prend 100% de la hauteur de la fenêtre */
 }
 .images{

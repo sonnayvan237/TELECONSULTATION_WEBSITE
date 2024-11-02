@@ -1,8 +1,9 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from .models import Medecins,Exams,Rendezvous,Patients
-from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import authenticate, login as auth_login,logout
 from .forms import RendezVousForm
 from django.contrib import messages
+from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 import re
@@ -13,10 +14,12 @@ from django.contrib.auth.hashers import make_password
 def about(request):
     return render(request, 'about.html')
 
+@login_required
 def generaliste(request):
     medecins = Medecins.objects.all()
     return render(request, 'generaliste.html', {'medecins': medecins})
 
+@login_required
 def specialiste(request):
     medecins = Medecins.objects.all()
     return render(request, 'specialiste.html', {'medecins': medecins})
@@ -24,41 +27,53 @@ def specialiste(request):
 def call_généraliste(request):
     return render(request, 'call_généraliste.html')
 
+def logoutuser(request):
+    logout(request)
+    messages.success(request, 'tu es maintenant deconnecte')
+    return redirect('login')
+
 def call_specialiste(request):
     return render(request, 'call_specialiste.html')
-
 
 def contact(request):
     return render(request, 'contact_us.html')
 
+@login_required
 def exams(request):
     exams = Exams.objects.all()
     return render(request, 'exams.html', {'exams': exams})
 
+@login_required
 def historique(request):
     return render(request, 'historique.html')
 
+@login_required
 def paiement_echec(request):
     return render(request, 'paiement_echec.html')
 
+@login_required
 def personnel(request):
     return render(request, 'personnel.html')
 
+@login_required
 def pharmacie(request):
     return render(request, 'pharmacie.html')
 
 def register_doctor(request):
     return render(request, 'register_like_doctor.html')
 
+@login_required
 def paiement_reussi(request):
     return render(request, 'paiement_reussi.html')
 
 def setting(request):
     return render(request, 'setting.html')
 
+@login_required
 def soumis_ordonnance(request):
     return render(request, 'soumission_ordonnance.html')
-    
+
+@login_required    
 def exams_option(request, id):   
     element = Exams.objects.get(id=id)
     exams = Exams.objects.all()    
@@ -187,7 +202,7 @@ def update_exam(request, id):
 #######################
 # prise de rendezvous et appel consultation video
 # Vue de consultation avec ID du patient ajouté aux créneaux réservés
-@login_required(login_url='login')
+@login_required
 def consultation(request, id):
     print(f"User is authenticated: {request.user.is_authenticated}")  # Pour le débogage
     # Récupération du médecin par son ID
@@ -234,7 +249,7 @@ def consultation(request, id):
     return render(request, 'consultation_option_spé.html', context)
 
 
-
+@login_required
 def delete_rendezvous(request, medecin_id, jour, heure):
     # Rechercher le médecin
     medecin = get_object_or_404(Medecins, id=medecin_id)
@@ -261,55 +276,70 @@ def register(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         
-        password_regex = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$' 
+        # Mot de passe avec une majuscule, minuscule, chiffre, et minimum 8 caractères
+        password_regex = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$'
 
         # Validation de la présence de toutes les données
         if nom_prenom and username and age and telephone and email and password:
-               # Vérification de la force du mot de passe
+            # Vérification de la force du mot de passe
             if not re.match(password_regex, password):
                 messages.error(request, "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, et un chiffre.")
                 return render(request, 'register.html')
             
-            patient = Patients.objects.create(
-                nom_prenom=nom_prenom,
-                username=username,
-                age=int(age),
-                telephone=int(telephone),
-                email=email,
-                password=make_password(password)
-            )
-            patient.save()
-            return redirect('login')  # Redirection vers la page de connexion après l'inscription
-    
+            # Création de l'utilisateur dans le modèle User
+            try:
+                user = User.objects.create_user(
+                    username=username,
+                    email=email,
+                    password=password
+                )
+
+                # Création du profil patient associé
+                patient = Patients.objects.create(
+                    user=user,
+                    nom_prenom=nom_prenom,
+                    age=int(age),
+                    telephone=int(telephone),
+                    email=email
+                )
+                messages.success(request, "Inscription réussie. Vous pouvez maintenant vous connecter.")
+                return redirect('login')  # Redirection vers la page de connexion
+
+            except Exception as e:
+                messages.error(request, f"Erreur lors de l'inscription : {str(e)}")
+                return render(request, 'register.html')
+
     return render(request, 'register.html')
 
 #######################
 #page de connexion(login)
 def login(request):
     if request.method == 'POST':
-        # Récupération des données du formulaire de connexion
         username = request.POST.get('username')
         password = request.POST.get('password')
 
-        patient = Patients.objects.get(username=username, password=password)
-        # Validation des informations de connexion
-        if patient:
-             # Vérifiez si le patient existe dans la base de données
-            try:
-                # Vérification du mot de passe
-                user = authenticate(request, username=username, password=password)
-                if user:
-                    # Si l'utilisateur est authentifié, on l'enregistre dans la session
-                    auth_login(request, user)
-                    return redirect('home')
-                else:
-                    messages.error(request, "Le mot de passe est incorrect.")
-                    return redirect('login')
+        # Authentification de l'utilisateur
+        user = authenticate(request, username=username, password=password)
 
+        # Vérifiez que l'utilisateur existe et qu'il est bien un patient
+        if user is not None:
+            try:
+                # Vérifier si l'utilisateur authentifié est dans la table Patients
+                patient = Patients.objects.get(user=user)  # Relier l’utilisateur au modèle `Patients`
             except Patients.DoesNotExist:
-                # Si le patient n'existe pas, afficher un message d'erreur
-                messages.error(request, "Nom ou prénom incorrect.")
+                patient = None
+
+            if patient:
+                # Si l'utilisateur est un patient, on le connecte
+                auth_login(request, user)  # Connecter l'utilisateur
+                messages.success(request, "Connexion réussie. Bienvenue!")
+                return redirect('home')  # Rediriger vers la page d'accueil
+            else:
+                messages.error(request, "Cet utilisateur n'est pas enregistré en tant que patient.")
                 return redirect('login')
+        else:
+            messages.error(request, "Nom d'utilisateur ou mot de passe incorrect.")
+            return redirect('login')
 
     return render(request, 'login.html')
 

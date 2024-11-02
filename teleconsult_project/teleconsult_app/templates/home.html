@@ -44,13 +44,17 @@
             </li>
           </ul>
         </div>
-        <div class="btn-group dropdown">
-          <button type="button" class="btn btn-danger dropdown-toggle fw-bold rounded-pill" data-bs-toggle="dropdown" aria-expanded="false">Compte</button>
-          <ul class="dropdown-menu">
-            <a href="{% url 'login' %}" class="dropdown-item fw-bold text-align-center text-danger">Sign in</a>
-            <a href="{% url 'register' %}" class="dropdown-item fw-bold text-align-center text-danger">register</a>
-          </ul>
-        </div>
+        {% if not user.is_authenticated %}
+          <div class="btn-group dropdown">
+            <button type="button" class="btn btn-danger dropdown-toggle fw-bold rounded-pill" data-bs-toggle="dropdown" aria-expanded="false">Compte</button>
+            <ul class="dropdown-menu">
+              <a href="{% url 'login' %}" class="dropdown-item fw-bold text-align-center text-danger">Sign in</a>
+              <a href="{% url 'register' %}" class="dropdown-item fw-bold text-align-center text-danger">register</a>
+            </ul>
+          </div>
+        {% else %}
+          <a href="{% url 'logoutuser' %}" class="fw-bold text-align-center text-danger">Déconnexion</a>
+        {% endif %}
         <div class="user">
           <a href="{% url 'register_doctor' %}" class="rounded-pill">Etre médecin</a>
         </div>

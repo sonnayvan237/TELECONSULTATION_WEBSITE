@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinLengthValidator
 from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Medecins(models.Model):
@@ -19,15 +20,14 @@ class Exams(models.Model):
     total = models.IntegerField(default=0)
         
 class Patients(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)  # Relation avec le modèle User
     nom_prenom = models.CharField(max_length=100)
-    username= models.CharField(max_length=100)
     age = models.IntegerField(null=True, blank=True)
     telephone = models.BigIntegerField(null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
-    password = models.CharField(
-        max_length=100, 
-        validators=[MinLengthValidator(8)],
-    )
+
+    def __str__(self):
+        return self.nom_prenom
     
 
 class Rendezvous(models.Model):

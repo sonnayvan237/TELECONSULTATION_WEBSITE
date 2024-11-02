@@ -126,3 +126,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+LOGIN_URL = 'login'  # Utilisez le nom de l'URL de votre vue de connexion
+
+
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Utiliser la base de données pour stocker les sessions
+SESSION_COOKIE_AGE = 1209600  # Durée de la session (2 semaines, par exemple)
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Maintenir la session même si l'onglet est fermé
+

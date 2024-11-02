@@ -1,5 +1,12 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from .models import Medecins,Exams,RendezVous,Patients
+from .models import Medecins,Exams,Rendezvous,Patients
+from django.contrib.auth import authenticate, login as auth_login
+from .forms import RendezVousForm
+from django.contrib import messages
+from django.contrib.auth import authenticate
+from django.contrib.auth.decorators import login_required
+import re
+from django.contrib.auth.hashers import make_password
 
 ######################
 #definition des root de toutes les pages
@@ -64,15 +71,17 @@ def deplacement(request, id):
     if request.method == "POST":
         deplacement = 'labo_switch' in request.POST # Vérifier si la checkbox est cochée
         if deplacement == False:
-            element = Exams.objects.get(id=id)
-            exams = Exams.objects.all()    
-            return redirect('deplacement', id=id) 
+            element.deplacement = 0   # Met à jour le montant de déplacement
+            element.total = element.prix + element.deplacement 
+            element.save()
+            return redirect('exams_option', id=id)
+        
+        else:  
+            element.deplacement = 2000  # Met à jour le montant de déplacement
+            element.total = element.prix + element.deplacement  # Calcule le total
+            element.save()  # Enregistre les modifications
+            return redirect('exams_option', id=id)  # Redirige après la sauvegarde
                  
-        element.deplacement = 2000 if deplacement else 0  # Met à jour le montant de déplacement
-        element.total = element.prix + element.deplacement  # Calcule le total
-        element.save()  # Enregistre les modifications
-        return redirect('exams_option', id=id)  # Redirige après la sauvegarde
-
     return render(request, 'exams_option.html', {'element':element})
 
 
@@ -176,31 +185,38 @@ def update_exam(request, id):
         return render(request, 'ajout_exam.html', {'exam' : update}) 
     
 #######################
-# prise de rendezVous et appel consultation video
-from .forms import RendezVousForm
-from django.contrib import messages
-
+# prise de rendezvous et appel consultation video
+# Vue de consultation avec ID du patient ajouté aux créneaux réservés
+@login_required(login_url='login')
 def consultation(request, id):
+    print(f"User is authenticated: {request.user.is_authenticated}")  # Pour le débogage
+    # Récupération du médecin par son ID
     medecin = get_object_or_404(Medecins, id=id)
+    
+    # Récupérer l'ID du patient à partir de l'utilisateur connecté
+    patient_id = request.user.id  # On utilise l'ID de l'utilisateur connecté
+    print("l'id du patient est:", patient_id)
     form = RendezVousForm(request.POST or None)
 
     # Gérer la réservation du rendez-vous
     if request.method == 'POST' and form.is_valid():
         jour = form.cleaned_data['jour']
         heure = form.cleaned_data['heure']
-        
+
         # Vérifiez si le créneau est déjà réservé
-        if RendezVous.objects.filter(medecin=medecin, jour=jour, heure=heure).exists():
+        if Rendezvous.objects.filter(medecin=medecin, jour=jour, heure=heure).exists():
             messages.error(request, "Ce créneau est déjà réservé. Veuillez en choisir un autre.")
         else:
+            # Création d'une nouvelle instance de rendez-vous
             rendez_vous = form.save(commit=False)
             rendez_vous.medecin = medecin
+            rendez_vous.patient_id = patient_id  # Stocker l'ID du patient ici
             rendez_vous.save()
             messages.success(request, "Rendez-vous réservé avec succès!")
             return redirect('consultation_option_specialiste', id=id)
-        
+
     # Convertir les rendez-vous réservés en un dictionnaire avec des clés formatées "jour-heure"
-    rendezvous_liste = RendezVous.objects.filter(medecin=medecin)
+    rendezvous_liste = Rendezvous.objects.filter(medecin=medecin)
     appointments = {f"{rdv.jour}-{rdv.heure.strftime('%H:%M')}": True for rdv in rendezvous_liste}
 
     # Passer les jours et heures pour afficher un calendrier
@@ -217,11 +233,13 @@ def consultation(request, id):
     }
     return render(request, 'consultation_option_spé.html', context)
 
+
+
 def delete_rendezvous(request, medecin_id, jour, heure):
     # Rechercher le médecin
     medecin = get_object_or_404(Medecins, id=medecin_id)
     # Chercher le rendez-vous correspondant au jour, heure, et médecin
-    rendez_vous = get_object_or_404(RendezVous, medecin=medecin, jour=jour, heure=heure)
+    rendez_vous = get_object_or_404(Rendezvous, medecin=medecin, jour=jour, heure=heure)
     
     # Supprimer le rendez-vous
     rendez_vous.delete()
@@ -232,14 +250,13 @@ def delete_rendezvous(request, medecin_id, jour, heure):
 
 #######################
 # page d'enregistrement(register)
-import re
+
 def register(request):
     if request.method == 'POST':
         # Récupération des données du formulaire
-        nom = request.POST.get('nom')
-        prenom = request.POST.get('prenom')
+        nom_prenom = request.POST.get('nom_prenom')
+        username = request.POST.get('username')
         age = request.POST.get('age')
-        date_de_naissance = request.POST.get('date_de_naissance')
         telephone = request.POST.get('telephone')
         email = request.POST.get('email')
         password = request.POST.get('password')
@@ -247,20 +264,19 @@ def register(request):
         password_regex = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$' 
 
         # Validation de la présence de toutes les données
-        if nom and prenom and age and date_de_naissance and telephone and email and password:
+        if nom_prenom and username and age and telephone and email and password:
                # Vérification de la force du mot de passe
             if not re.match(password_regex, password):
                 messages.error(request, "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, et un chiffre.")
                 return render(request, 'register.html')
             
             patient = Patients.objects.create(
-                nom=nom,
-                prenom=prenom,
+                nom_prenom=nom_prenom,
+                username=username,
                 age=int(age),
-                date_de_naissance=date_de_naissance,
                 telephone=int(telephone),
                 email=email,
-                password=password
+                password=make_password(password)
             )
             patient.save()
             return redirect('login')  # Redirection vers la page de connexion après l'inscription
@@ -269,28 +285,32 @@ def register(request):
 
 #######################
 #page de connexion(login)
-from django.contrib import messages
 def login(request):
     if request.method == 'POST':
-        # Récupération des données du formulaire
-        nom = request.POST.get('nom')
-        prenom = request.POST.get('prenom')
+        # Récupération des données du formulaire de connexion
+        username = request.POST.get('username')
         password = request.POST.get('password')
 
+        patient = Patients.objects.get(username=username, password=password)
         # Validation des informations de connexion
-        if nom and prenom and password:
-            # Rechercher un patient avec les informations fournies
+        if patient:
+             # Vérifiez si le patient existe dans la base de données
             try:
-                patient = Patients.objects.get(nom=nom, prenom=prenom, password=password)
-                # Si un patient est trouvé, redirection vers la page 'home'
-                if patient:
+                # Vérification du mot de passe
+                user = authenticate(request, username=username, password=password)
+                if user:
+                    # Si l'utilisateur est authentifié, on l'enregistre dans la session
+                    auth_login(request, user)
                     return redirect('home')
-                
+                else:
+                    messages.error(request, "Le mot de passe est incorrect.")
+                    return redirect('login')
+
             except Patients.DoesNotExist:
-                # Si aucun patient correspondant n'est trouvé, afficher un message d'erreur
-                messages.error(request, "Nom, prénom ou mot de passe incorrect.")
+                # Si le patient n'existe pas, afficher un message d'erreur
+                messages.error(request, "Nom ou prénom incorrect.")
                 return redirect('login')
-    
+
     return render(request, 'login.html')
 
 

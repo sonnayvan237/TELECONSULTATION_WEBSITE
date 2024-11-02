@@ -35,6 +35,11 @@
 
 <div class="prise_rendezvous pt-5">
     <h2 class="pb-4 text-dark fw-bold">Calendrier des Rendez-vous :</h2>
+    {% if messages %}
+        {% for message in messages %}
+                <div class="alert alert-danger">{{ message }}</div>
+        {% endfor %}
+    {% endif %} 
     
     <!-- Calendrier -->
     <table id="calendar">
@@ -65,9 +70,7 @@
             {% endfor %}
         </tbody>
     </table>
-    
-    
-    
+
     <!-- Formulaire de Réservation -->
     <h2 class="pb-4 pt-4 text-dark fw-bold">Réserver un Rendez-vous</h2>
     <form method="post" class="pb-5">

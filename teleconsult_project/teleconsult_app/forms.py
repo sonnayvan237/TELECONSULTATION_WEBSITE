@@ -1,9 +1,9 @@
 from django import forms
-from .models import RendezVous
+from .models import Rendezvous
 
 class RendezVousForm(forms.ModelForm):
     class Meta:
-        model = RendezVous
+        model = Rendezvous
         fields = ['jour', 'heure']
         widgets = {
             'jour': forms.Select(choices=[

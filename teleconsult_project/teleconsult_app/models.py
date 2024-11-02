@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MinLengthValidator
+from django.contrib.auth.hashers import make_password, check_password
 
 # Create your models here.
 class Medecins(models.Model):
@@ -14,11 +15,24 @@ class Exams(models.Model):
     nom = models.CharField(max_length=100)
     prix = models.IntegerField()
     photo = models.ImageField(upload_to='images/')
-    deplacement = models.IntegerField(blank=True)
+    deplacement = models.IntegerField(blank=True, default=0)
     total = models.IntegerField(default=0)
+        
+class Patients(models.Model):
+    nom_prenom = models.CharField(max_length=100)
+    username= models.CharField(max_length=100)
+    age = models.IntegerField(null=True, blank=True)
+    telephone = models.BigIntegerField(null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
+    password = models.CharField(
+        max_length=100, 
+        validators=[MinLengthValidator(8)],
+    )
     
-class RendezVous(models.Model):
+
+class Rendezvous(models.Model):
     medecin = models.ForeignKey(Medecins, on_delete=models.CASCADE)
+    patient = models.ForeignKey(Patients, on_delete=models.CASCADE, null=True) 
     jour = models.CharField(max_length=10, choices=[
         ('lundi', 'Lundi'),
         ('mardi', 'Mardi'),
@@ -28,18 +42,5 @@ class RendezVous(models.Model):
     ])
     heure = models.TimeField()
 
-class Patients(models.Model):
-    nom = models.CharField(max_length=100)
-    prenom = models.CharField(max_length=100)
-    age = models.IntegerField(null=True, blank=True)
-    date_de_naissance = models.DateField(null=True, blank=True)
-    telephone = models.BigIntegerField(null=True, blank=True)
-    email = models.EmailField(default='example@example.com')
-    password = models.CharField(
-        max_length=100, 
-        validators=[MinLengthValidator(8)]
-    )
-    is_active = models.BooleanField(default=False)  # Nouveau champ
-    # Ajoutez cette option pour afficher les emails plus lisiblement en cas d’erreurs
     def __str__(self):
-        return self.email
+        return f"{self.jour} à {self.heure} avec {self.medecin} pour {self.patient}"

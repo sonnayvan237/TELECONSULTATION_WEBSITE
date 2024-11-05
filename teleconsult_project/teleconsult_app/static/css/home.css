@@ -319,6 +319,13 @@
     margin-left: 36%;
 }
 
+.deconnexion{
+    text-decoration: none;
+    border: 1px rgb(231, 33, 33);
+    background-color: rgb(231, 33, 33);
+    padding: 7px;
+}
+
 
 
 

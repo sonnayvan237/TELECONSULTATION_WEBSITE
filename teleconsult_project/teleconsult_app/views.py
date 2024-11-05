@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 import re
-from django.contrib.auth.hashers import make_password
+from django.http import HttpResponseForbidden
 
 ######################
 #definition des root de toutes les pages
@@ -45,7 +45,21 @@ def exams(request):
 
 @login_required
 def historique(request):
-    return render(request, 'historique.html')
+    # Récupérer l'ID du patient connecté (associé à l'utilisateur)
+    patient_id = request.user.id
+
+    # Filtrer les rendez-vous par patient
+    rendezvous_list = Rendezvous.objects.filter(patient_id=patient_id)
+    nombre =1
+    if rendezvous_list :
+        nombre = nombre +1
+    
+    # Contexte pour le template
+    context = {
+        'rendezvous_list': rendezvous_list
+    }
+
+    return render(request, 'historique.html', context)
 
 @login_required
 def paiement_echec(request):
@@ -201,7 +215,6 @@ def update_exam(request, id):
     
 #######################
 # prise de rendezvous et appel consultation video
-# Vue de consultation avec ID du patient ajouté aux créneaux réservés
 @login_required
 def consultation(request, id):
     print(f"User is authenticated: {request.user.is_authenticated}")  # Pour le débogage
@@ -253,13 +266,17 @@ def consultation(request, id):
 def delete_rendezvous(request, medecin_id, jour, heure):
     # Rechercher le médecin
     medecin = get_object_or_404(Medecins, id=medecin_id)
-    # Chercher le rendez-vous correspondant au jour, heure, et médecin
-    rendez_vous = get_object_or_404(Rendezvous, medecin=medecin, jour=jour, heure=heure)
-    
-    # Supprimer le rendez-vous
-    rendez_vous.delete()
-    messages.success(request, "Le rendez-vous a été annulé avec succès.")
+       # Récupérer l'ID du patient connecté (associé à l'utilisateur)
+    patient_id = request.user.id
 
+    # Filtrer les rendez-vous par patient
+    rendez_vous = Rendezvous.objects.filter(medecin=medecin, patient_id=patient_id, jour=jour, heure=heure).first()
+    if rendez_vous:
+        # Supprimer le rendez-vous
+        rendez_vous.delete()
+        messages.success(request, "Le rendez-vous a été annulé avec succès.")
+    else :
+        messages.success(request, "Vous ne pouvez supprimer ce car ce n'est pas un rendez vous que vous avez reservé")
     # Rediriger vers la page de consultation du médecin
     return redirect('consultation_option_specialiste', id=medecin_id)
 

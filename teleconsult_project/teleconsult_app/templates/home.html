@@ -14,15 +14,15 @@
     <header>
       <div class="bg-body-tertiary navbar pt-3 pb-3">
         <div>
-          <a class="navbar-brand" href="#"><img src="{% static 'images/1.png' %}" alt="Logo" width="70" height="50" class="d-inline-block align-text-center" /></a>
+          <a class="navbar-brand" href="#"><img src="{% static 'images/1.png' %}" alt="Logo" width="70" height="55"/></a>
         </div>
         <div>
           <ul class="nav">
             <div class="btn-group dropdown">
-              <button type="button" class="btn text-primary dropdown-toggle fw-bold" data-bs-toggle="dropdown" aria-expanded="false">Consulter</button>
+              <button type="button" class="btn text-danger dropdown-toggle fw-bold" data-bs-toggle="dropdown" aria-expanded="false">Consulter</button>
               <ul class="dropdown-menu">
-                <a href="{% url 'generaliste' %}" class="dropdown-item fw-bold text-align-center text-primary">Généralistes</a>
-                <a href="{% url 'specialiste' %}" class="dropdown-item fw-bold text-align-center text-primary">Spécialistes</a>
+                <a href="{% url 'generaliste' %}" class="dropdown-item fw-bold text-align-center text-danger">Généralistes</a>
+                <a href="{% url 'specialiste' %}" class="dropdown-item fw-bold text-align-center text-danger">Spécialistes</a>
               </ul>
             </div>
             <li class="nav-item">
@@ -55,7 +55,7 @@
           </div>
         {% else %}
           <div class="btn-group dropdown ms-3">
-            <button type="button" class="btn" data-bs-toggle="dropdown" aria-expanded="false"><i class='bx bx-user-circle' style='color:rgba(15,36,215,0.94); font-size: 40px;'></i></button>
+            <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class='bx bx-user-circle' style='color:rgba(15,36,215,0.94); font-size: 40px;'></i></button>
             <ul class="dropdown-menu">
               <a href="{% url 'profil' %}" class="dropdown-item fw-bold text-align-center text-primary">Profil</a>
               <a href="{% url 'logoutuser' %}" class="dropdown-item fw-bold text-align-center text-primary">Deconnexion</a>
@@ -63,7 +63,7 @@
           </div>
         {% endif %}
         <div class="user">
-          <a href="{% url 'register_doctor' %}" class="rounded-pill me-3">Etre médecin</a>
+          <a href="{% url 'register_doctor' %}" class="rounded-pill me-3">Etre Praticien</a>
         </div>
       </div>
     </header>

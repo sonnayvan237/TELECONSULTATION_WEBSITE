@@ -13,8 +13,23 @@
 
 <div class="container">
     <div class="text-center">
-        <!-- Icône de profil ou photo de profil -->
-        <p><i class='bx bx-user-circle' style='font-size: 150px;'></i></p>
+        <div class="text-center">
+            <div class="profile-container">
+                <form method="POST" enctype="multipart/form-data" action="{% url 'update_profile_picture' %}">
+                    {% csrf_token %}
+                    <!-- Image de profil avec icône de caméra -->
+                    <div class="profile-picture-wrapper">
+                        <img id="profileImage" src="{% if user.profile.profile_picture %}{{ user.profile.profile_picture.url }}{% else %}{% static 'images/default-profile.png' %}{% endif %}" alt="Photo de profil" />
+                        <label for="profileImageInput" class="camera-icon">
+                            <i class='bx bx-camera'></i>
+                        </label>
+                        <input type="file" id="profileImageInput" name="profile_picture" accept="image/*" onchange="previewImage(event)" style="display: none;">
+                    </div>
+                    <!-- Bouton de soumission -->
+                    <button type="submit" class="save-button">Enregistrer</button>
+                </form>
+            </div>
+        </div>
         
         <div class="user-info mt-5 mb-5">
             <h2 class="fw-bold text-primary mt-3">Nom d'Utilisateur : <span class="text-dark">{{ patient.nom_prenom }}</span></h2>
@@ -33,6 +48,14 @@
         </div>
     </div>
 </div>
-
+<script>
+    function previewImage(event) {
+        const imagePreview = document.getElementById('profileImage');
+        imagePreview.src = URL.createObjectURL(event.target.files[0]);
+        imagePreview.onload = function () {
+            URL.revokeObjectURL(imagePreview.src); // Libère la mémoire une fois l'image chargée
+        };
+    }    
+</script>
 </body>
 </html>

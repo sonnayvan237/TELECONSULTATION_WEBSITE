@@ -1,5 +1,5 @@
 from django import forms
-from .models import Rendezvous
+from .models import Rendezvous, Profile
 
 class RendezVousForm(forms.ModelForm):
     class Meta:
@@ -15,3 +15,10 @@ class RendezVousForm(forms.ModelForm):
             ]),
             'heure': forms.TimeInput(attrs={'type': 'time'})
         }
+
+
+# forms.py
+class ProfilePictureForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['profile_picture']

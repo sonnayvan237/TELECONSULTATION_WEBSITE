@@ -46,3 +46,10 @@ class Ordonnances(models.Model):
     fichier = models.FileField(upload_to='ordonnances/')
     commentaire = models.TextField(null=True, blank=True)
     patient = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
+
+    def __str__(self):
+        return self.user.username

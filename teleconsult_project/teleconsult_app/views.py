@@ -1,13 +1,12 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from .models import Medecins,Exams,Rendezvous,Patients,Ordonnances
+from .models import Medecins,Exams,Rendezvous,Patients,Ordonnances,Profile
 from django.contrib.auth import authenticate, login as auth_login,logout
-from .forms import RendezVousForm
+from .forms import RendezVousForm, ProfilePictureForm
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 import re
-from django.http import HttpResponseForbidden
 
 ######################
 #definition des root de toutes les pages
@@ -504,3 +503,19 @@ def home(request):
         },
     ]
     return render(request, 'home.html', {'daily_health_tips': daily_health_tips,'services': services, 'engagements': engagements, 'specialistes': specialistes})
+
+
+
+@login_required
+def update_profile_picture(request):
+    profile, created = Profile.objects.get_or_create(user=request.user)
+    
+    if request.method == 'POST':
+        form = ProfilePictureForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profil')  # Redirige vers la page de profil après la mise à jour
+    else:
+        form = ProfilePictureForm(instance=profile)
+
+    return render(request, 'profil.html', {'form': form, 'user': request.user})

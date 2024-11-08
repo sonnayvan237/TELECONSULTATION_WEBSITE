@@ -22,7 +22,6 @@
 }
 
 .user a{
-   
     text-decoration: none;
     font-weight: bold;
     color: white;
@@ -115,6 +114,10 @@
     font-size: 40px;
     margin-left: 52%;
     color: rgb(255, 252, 252); 
+}
+
+.nav-link{
+    color: rgb(238, 56, 56) !important;
 }
 .item4 a{
     position:absolute;

@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from .models import Medecins,Exams,Rendezvous,Patients
+from .models import Medecins,Exams,Rendezvous,Patients,Ordonnances
 from django.contrib.auth import authenticate, login as auth_login,logout
 from .forms import RendezVousForm
 from django.contrib import messages
@@ -13,53 +13,6 @@ from django.http import HttpResponseForbidden
 #definition des root de toutes les pages
 def about(request):
     return render(request, 'about.html')
-
-@login_required
-def generaliste(request):
-    medecins = Medecins.objects.all()
-    return render(request, 'generaliste.html', {'medecins': medecins})
-
-@login_required
-def specialiste(request):
-    medecins = Medecins.objects.all()
-    return render(request, 'specialiste.html', {'medecins': medecins})
-
-def call_généraliste(request):
-    return render(request, 'call_généraliste.html')
-
-def logoutuser(request):
-    logout(request)
-    messages.success(request, 'tu es maintenant deconnecte')
-    return redirect('login')
-
-def call_specialiste(request):
-    return render(request, 'call_specialiste.html')
-
-def contact(request):
-    return render(request, 'contact_us.html')
-
-@login_required
-def exams(request):
-    exams = Exams.objects.all()
-    return render(request, 'exams.html', {'exams': exams})
-
-@login_required
-def historique(request):
-    # Récupérer l'ID du patient connecté (associé à l'utilisateur)
-    patient_id = request.user.id
-
-    # Filtrer les rendez-vous par patient
-    rendezvous_list = Rendezvous.objects.filter(patient_id=patient_id)
-    nombre =1
-    if rendezvous_list :
-        nombre = nombre +1
-    
-    # Contexte pour le template
-    context = {
-        'rendezvous_list': rendezvous_list
-    }
-
-    return render(request, 'historique.html', context)
 
 @login_required
 def paiement_echec(request):
@@ -83,17 +36,80 @@ def paiement_reussi(request):
 def setting(request):
     return render(request, 'setting.html')
 
-@login_required
-def soumis_ordonnance(request):
-    return render(request, 'soumission_ordonnance.html')
+def call_généraliste(request):
+    return render(request, 'call_généraliste.html')
 
+def call_specialiste(request):
+    return render(request, 'call_specialiste.html')
+
+def contact(request):
+    return render(request, 'contact_us.html')
+
+#######################
+#Profil utilisateur
+def profil(request):
+    patient = get_object_or_404(Patients, user=request.user)  # Utilisation de la relation OneToOne avec user
+    return render(request, 'profil.html', {'patient': patient})
+
+
+########################
+#affichage des medecins
+@login_required
+def specialiste(request):
+    medecins = Medecins.objects.all()
+    return render(request, 'specialiste.html', {'medecins': medecins})
+
+@login_required
+def generaliste(request):
+    medecins = Medecins.objects.all()
+    return render(request, 'generaliste.html', {'medecins': medecins})
+
+########################
+# Deconnexion
+def logoutuser(request):
+    logout(request)
+    messages.success(request, 'tu es maintenant deconnecte')
+    return redirect('login')
+
+#########################
+# affichage de a page des examens
+@login_required
+def exams(request):
+    exams = Exams.objects.all()
+    return render(request, 'exams.html', {'exams': exams})
+
+########################
+# gestion de l'historique
+@login_required
+def historique(request):
+    # Récupérer l'ID du patient connecté (associé à l'utilisateur)
+    patient_id = request.user.id
+
+    # Filtrer les rendez-vous par patient
+    rendezvous_list = Rendezvous.objects.filter(patient_id=patient_id)
+    ordonnance = Ordonnances.objects.filter(patient_id=patient_id)   
+    # Contexte pour le template
+    context = {
+        'rendezvous_list': rendezvous_list,
+        'ordonnance' : ordonnance
+    }
+    return render(request, 'historique.html', context)
+
+######################
+# Suppression d'ordonnance
+def delete_ordonnance(request, ordonnance_id):
+    ordonnance = get_object_or_404(Ordonnances, id=ordonnance_id, patient=request.user.id)
+    ordonnance.delete()
+    messages.success(request, "L'ordonnance a été supprimée avec succès.")
+    return redirect('historique')
+
+################################
+#gestion des examens
 @login_required    
 def exams_option(request, id):   
     element = Exams.objects.get(id=id)
     exams = Exams.objects.all()    
     return render(request, 'exams_option.html', {'element':element, 'exams': exams})
-
-######################
 # ajout de la valeur 2000 pour le deplacement sur la page examen
 def deplacement(request, id):
     element = Exams.objects.get(id=id)
@@ -261,7 +277,6 @@ def consultation(request, id):
     }
     return render(request, 'consultation_option_spé.html', context)
 
-
 @login_required
 def delete_rendezvous(request, medecin_id, jour, heure):
     # Rechercher le médecin
@@ -281,8 +296,28 @@ def delete_rendezvous(request, medecin_id, jour, heure):
     return redirect('consultation_option_specialiste', id=medecin_id)
 
 #######################
-# page d'enregistrement(register)
+#soumission d'ordonnace
+@login_required
+def soumis_ordonnance(request):
+    if request.method == 'POST':
+        # Récupération des données du formulaire
+        fichier = request.FILES.get('fichier')
+        commentaire = request.POST.get('commentaire')
+        patient_id = request.user.id
+        
+        # Vérifier que les champs requis sont fournis
+        if fichier and commentaire:
+            # Créer une nouvelle instance d'Ordonnances et sauvegarder
+            Ordonnances.objects.create(fichier=fichier, commentaire=commentaire, patient_id=patient_id)
+            return redirect('soumission_ordonnance')
+    
+    # Récupérer toutes les ordonnances pour les afficher dans le tableau (si nécessaire)
+    ordonnances = Ordonnances.objects.all()
+    return render(request, 'soumission_ordonnance.html', {'ordonnances': ordonnances})
 
+
+#######################
+# page d'enregistrement(register)
 def register(request):
     if request.method == 'POST':
         # Récupération des données du formulaire

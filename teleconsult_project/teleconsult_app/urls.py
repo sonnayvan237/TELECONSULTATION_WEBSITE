@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -26,7 +28,8 @@ urlpatterns = [
     path('soumission_ordonnance/', views.soumis_ordonnance, name='soumission_ordonnance'), 
     path('deplacement/<int:id>/', views.deplacement, name='deplacement'),
     path('delete_rendezvous/<int:medecin_id>/<str:jour>/<str:heure>/', views.delete_rendezvous, name='delete_rendezvous'),
-
+    path('delete_ordonnance/<int:ordonnance_id>/', views.delete_ordonnance, name='delete_ordonnance'),
+    path('profil/', views.profil, name='profil'),
 
     ######################
     #action sur le medecin
@@ -37,7 +40,8 @@ urlpatterns = [
     #action sur l'examen
     path("add_exam/", views.add_or_update_exams, name="add_exam"),
     path("update_exam/<int:id>/", views.add_or_update_exams, name="update_exam"), 
-    path("delete_exam/<int:id>/", views.delete_exam, name="delete_exam"),
-    
-    # Ajoutez d'autres URL ici
+    path("delete_exam/<int:id>/", views.delete_exam, name="delete_exam"), 
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

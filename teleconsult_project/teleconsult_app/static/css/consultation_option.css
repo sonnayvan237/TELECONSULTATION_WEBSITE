@@ -8,7 +8,6 @@
 
 body{
     background-image: url(./../images/pexels-karolina-grabowska-4386464.jpg) !important;
-    /* background-repeat: no-repeat !important; */
     background-size:100%;
     height: 100vh !important; /* Prend 100% de la hauteur de la fenêtre */
 }

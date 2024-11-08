@@ -42,5 +42,7 @@ class Rendezvous(models.Model):
     ])
     heure = models.TimeField()
 
-    def __str__(self):
-        return f"{self.jour} à {self.heure} avec {self.medecin} pour {self.patient}"
+class Ordonnances(models.Model):
+    fichier = models.FileField(upload_to='ordonnances/')
+    commentaire = models.TextField(null=True, blank=True)
+    patient = models.ForeignKey(User, on_delete=models.CASCADE, null=True)

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/ajout_exam.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <title>Document</title>
+    <title>Historique</title>
 </head>
 <body>
     <h1 class="text-center text-white fw-bold pt-5 pb-5">Historique utilisateur :</h1>
@@ -23,13 +23,33 @@
                     </div>
                     <form method="post" action="{% url 'delete_rendezvous' rdv.medecin.id rdv.jour rdv.heure|time:'H:i' %}">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-primary btn-payer">Supprimer</button>
+                        <button type="submit" class="btn btn-primary btn-payer ms-5 mb-3">Supprimer</button>
                     </form>
                 </div>
             {% endfor %}
         {% else %}
             <p class="fs-2 fw-bold text-center">Vous n'avez aucun rendez-vous dans votre historique.</p>
         {% endif %}
+
+        {% comment %} affichage des ordonnance dans l'historique {% endcomment %}
+        {% if ordonnance %}
+            {% for ordonnance in ordonnance %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h2>Ordonnance N°{{ forloop.counter }}</h2>
+                        <span>Vous avez soumis une ordonnance : <strong><a href="{{ ordonnance.fichier.url }}" target="_blank">{{ ordonnance.fichier.name}}</a></strong></span><br>
+                        <span>Vous avez mis comme commentaire : <strong>{{ ordonnance.commentaire }}</strong></span><br>
+                    </div>
+                    <form method="post" action="{% url 'delete_ordonnance' ordonnance.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary btn-payer ms-5 mb-3">Supprimer</button>
+                    </form>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="fs-2 fw-bold text-center">Vous n'avez soumis aucune ordonnance</p>
+        {% endif %}
+
     </div>
     
 </body>

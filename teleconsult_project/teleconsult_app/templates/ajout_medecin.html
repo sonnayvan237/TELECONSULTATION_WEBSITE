@@ -64,6 +64,11 @@
                     <td>
                         <span><a href="{% url 'update_medecin' medecin.id %}"><i class="bx bx-pencil icon me-2"></i></a></span>
                         <span><a href="{% url 'delete_medecin' medecin.id %}" class="text-danger"><i class="bx bx-trash icon"></i></a></span>
+                        <span>
+                            <a href="{% url 'activate_medecin' medecin.id %}" class="{% if medecin.is_active %}text-success{% else %}text-warning{% endif %}">
+                                <i class="bx {% if medecin.is_active %}bxs-check-circle{% else %}bx-minus-circle{% endif %} icon"></i>
+                            </a>
+                        </span>
                     </td>
                     
                 </tr>

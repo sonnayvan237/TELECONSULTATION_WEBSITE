@@ -5,8 +5,12 @@ from .forms import RendezVousForm, ProfilePictureForm
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required,user_passes_test
 import re
+
+
+def admin_required(user):
+    return user.is_superuser
 
 ######################
 #definition des root de toutes les pages
@@ -18,15 +22,8 @@ def paiement_echec(request):
     return render(request, 'paiement_echec.html')
 
 @login_required
-def personnel(request):
-    return render(request, 'personnel.html')
-
-@login_required
 def pharmacie(request):
     return render(request, 'pharmacie.html')
-
-def register_doctor(request):
-    return render(request, 'register_like_doctor.html')
 
 @login_required
 def paiement_reussi(request):
@@ -54,21 +51,24 @@ def profil(request):
 ########################
 #affichage des medecins
 @login_required
-def specialiste(request):
-    medecins = Medecins.objects.all()
-    return render(request, 'specialiste.html', {'medecins': medecins})
+def generaliste(request):
+    # Afficher uniquement les généralistes actifs
+    medecins = Medecins.objects.filter(is_active=True, specialite="Généraliste")
+    return render(request, 'generaliste.html', {'medecins': medecins})
 
 @login_required
-def generaliste(request):
-    medecins = Medecins.objects.all()
-    return render(request, 'generaliste.html', {'medecins': medecins})
+def specialiste(request):
+    # Afficher uniquement les spécialistes actifs
+    medecins = Medecins.objects.filter(is_active=True).exclude(specialite = "Généraliste")
+    return render(request, 'specialiste.html', {'medecins': medecins})
+
 
 ########################
 # Deconnexion
 def logoutuser(request):
     logout(request)
     messages.success(request, 'tu es maintenant deconnecte')
-    return redirect('login')
+    return redirect('home')
 
 #########################
 # affichage de a page des examens
@@ -131,6 +131,7 @@ def deplacement(request, id):
 
 #######################
 # operation d'ajout, de modification et de suppression des medecin
+@user_passes_test(admin_required)
 def add_or_update_medecin(request, id=None):
     if id:  # Si un ID est passé, on récupère le médecin pour la modification
         medecin = Medecins.objects.get(id=id)
@@ -162,6 +163,7 @@ def add_or_update_medecin(request, id=None):
     medecins = Medecins.objects.all()
     return render(request, 'ajout_medecin.html', {'medecins': medecins, 'medecin': medecin})
 
+@user_passes_test(admin_required)
 def delete_medecin(request, id):
     remove = Medecins.objects.get(id=id)
     if remove:
@@ -169,6 +171,7 @@ def delete_medecin(request, id):
         return redirect('add_medecin')
     return render(request, "",{'id':remove})
 
+@user_passes_test(admin_required)
 def update_medecin(request, id):
         update = Medecins.objects.get(id=id)
         if request.method  == 'POST':
@@ -183,6 +186,7 @@ def update_medecin(request, id):
     
 #######################
 #page d'ajout, de modifications et de suppression des examens
+@user_passes_test(admin_required)
 def add_or_update_exams(request, id=None):
     if id:  # Si un ID est passé, on récupère l'examen pour la modification
         exam = Exams.objects.get(id=id)
@@ -211,6 +215,7 @@ def add_or_update_exams(request, id=None):
     exams = Exams.objects.all()
     return render(request, 'ajout_exam.html', {'exams': exams, 'exam': exam})
 
+@user_passes_test(admin_required)
 def delete_exam(request, id):
     remove = Exams.objects.get(id=id)
     if remove:
@@ -218,6 +223,7 @@ def delete_exam(request, id):
         return redirect('add_exam')
     return render(request, "",{'id':remove})
 
+@user_passes_test(admin_required)
 def update_exam(request, id):
         update = Exams.objects.get(id=id)
         if request.method  == 'POST':
@@ -369,34 +375,45 @@ def login(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
 
-        # Authentification de l'utilisateur
         user = authenticate(request, username=username, password=password)
 
-        # Vérifiez que l'utilisateur existe et qu'il est bien un patient
         if user is not None:
+            # Vérifiez si l'utilisateur est un patient
             try:
-                # Vérifier si l'utilisateur authentifié est dans la table Patients
-                patient = Patients.objects.get(user=user)  # Relier l’utilisateur au modèle `Patients`
-            except Patients.DoesNotExist:
-                patient = None
-
-            if patient:
-                # Si l'utilisateur est un patient, on le connecte
-                auth_login(request, user)  # Connecter l'utilisateur
+                patient = Patients.objects.get(user=user)
+                auth_login(request, user)
                 messages.success(request, "Connexion réussie. Bienvenue!")
-                return redirect('home')  # Rediriger vers la page d'accueil
-            else:
-                messages.error(request, "Cet utilisateur n'est pas enregistré en tant que patient.")
+                return redirect('home_patient')  # Rediriger vers la page patient
+
+            except Patients.DoesNotExist:
+                pass  # Si ce n'est pas un patient, on continue pour vérifier si c'est un médecin
+
+            # Vérifiez si l'utilisateur est un médecin
+            try:
+                medecin = Medecins.objects.get(user=user)
+                auth_login(request, user)
+                
+                # Vérifiez si le médecin est inactif et affichez un message d'avertissement
+                if not medecin.is_active:
+                    messages.warning(request, "Votre compte est inactif, mais vous pouvez tout de même accéder au site.")
+                
+                # Redirection vers la page d'accueil du médecin
+                messages.success(request, "Connexion réussie. Bienvenue, Docteur!")
+                return redirect('home_doctor')  # Rediriger vers la page médecin
+
+            except Medecins.DoesNotExist:
+                messages.error(request, "Cet utilisateur n'est pas enregistré en tant que patient ou médecin.")
                 return redirect('login')
+
         else:
             messages.error(request, "Nom d'utilisateur ou mot de passe incorrect.")
             return redirect('login')
 
     return render(request, 'login.html')
 
-
 #######################
 # page d'acceuil
+
 def home(request):
     services = [
         {
@@ -505,7 +522,8 @@ def home(request):
     return render(request, 'home.html', {'daily_health_tips': daily_health_tips,'services': services, 'engagements': engagements, 'specialistes': specialistes})
 
 
-
+####################
+# Ajout de la photo de profil
 @login_required
 def update_profile_picture(request):
     profile, created = Profile.objects.get_or_create(user=request.user)
@@ -519,3 +537,67 @@ def update_profile_picture(request):
         form = ProfilePictureForm(instance=profile)
 
     return render(request, 'profil.html', {'form': form, 'user': request.user})
+
+def register_doctor(request):
+    if request.method == 'POST':
+        # Récupération des données du formulaire
+        nom = request.POST.get('firstname')
+        specialite = request.POST.get('specialite')
+        email = request.POST.get('email')
+        age = request.POST.get('age')
+        password = request.POST.get('password')
+        username = request.POST.get('username')  # Assurez-vous qu'il existe un champ 'username' dans le formulaire
+
+        # Validation du mot de passe (au moins 8 caractères, 1 majuscule, 1 minuscule, et 1 chiffre)
+        password_regex = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$'
+        
+        if not re.match(password_regex, password):
+            messages.error(request, "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, et un chiffre.")
+            return render(request, 'register_like_doctor.html')
+
+        # Vérification de la présence de toutes les données obligatoires
+        if nom and specialite and email and age and password and username:
+            try:
+                # Création de l'utilisateur dans le modèle User
+                user = User.objects.create_user(
+                    username=username,
+                    email=email,
+                    password=password
+                )
+                
+                # Création du profil médecin associé
+                medecin = Medecins.objects.create(
+                    user=user,
+                    nom=nom,
+                    specialite=specialite,
+                    email=email,
+                    age=int(age)
+                )
+                
+                messages.success(request, "Inscription réussie. Vous pouvez maintenant vous connecter.")
+                return redirect('login')  # Redirection vers la page de connexion pour les médecins
+
+            except Exception as e:
+                messages.error(request, f"Erreur lors de l'inscription : {str(e)}")
+                return render(request, 'register_like_doctor.html')
+        
+        else:
+            messages.error(request, "Tous les champs sont obligatoires.")
+            return render(request, 'register_like_doctor.html')
+
+    return render(request, 'register_like_doctor.html')
+
+
+@login_required
+def home_doctor(request):
+    # Vue pour la page d'accueil des médecins
+    return render(request, 'home_doctor.html')
+
+def activate_medecin(request, medecin_id):
+    medecin = get_object_or_404(Medecins, id=medecin_id)
+    # Alterner le statut actif
+    medecin.is_active = not medecin.is_active
+    medecin.save()
+    status = "activé" if medecin.is_active else "désactivé"
+    messages.success(request, f"Le statut de {medecin.nom} a été {status}.")
+    return redirect('add_medecin')  # Redirigez vers la liste des médecins (ou autre page d'administration)

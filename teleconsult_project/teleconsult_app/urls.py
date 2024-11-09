@@ -20,9 +20,7 @@ urlpatterns = [
     path('login/', views.login, name='login'),
     path('paiement_echec/', views.paiement_echec, name='paiement_echec'),
     path('paiement_reussi/', views.paiement_reussi, name='paiement_reussi'),
-    path('personnel/', views.personnel, name='personnel'), 
     path('pharmacie/', views.pharmacie, name='pharmacie'), 
-    path('register_doctor/', views.register_doctor, name='register_doctor'),
     path('register/', views.register, name='register'), 
     path('setting/', views.setting, name='setting'),
     path('soumission_ordonnance/', views.soumis_ordonnance, name='soumission_ordonnance'), 
@@ -31,7 +29,13 @@ urlpatterns = [
     path('delete_ordonnance/<int:ordonnance_id>/', views.delete_ordonnance, name='delete_ordonnance'),
     path('profil/', views.profil, name='profil'),
     path('update_profile_picture/', views.update_profile_picture, name='update_profile_picture'),
-
+    path('register_doctor/', views.register_doctor, name='register_doctor'),
+    path('home/patient/', views.home, name='home_patient'),
+    path('home/doctor/', views.home_doctor, name='home_doctor'),
+    path('activate_medecin/<int:medecin_id>/', views.activate_medecin, name='activate_medecin'),
+    # path('admin_dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    
+    
     ######################
     #action sur le medecin
     path("add_medecin/", views.add_or_update_medecin, name="add_medecin"),

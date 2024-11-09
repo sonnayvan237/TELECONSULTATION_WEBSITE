@@ -17,6 +17,12 @@ body{
     background-position: center;
 } 
 
+.title{
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
 .form-box{
     position: relative;
     display: flex;
@@ -56,31 +62,6 @@ body{
    text-decoration: underline;
 }
 
-.top h1{
-    color: #fff;
-    font-size: 30px;
-    text-align: center;
-    padding: 10px 0 30px 0;
-}
-
-.two-forms{
-    display: flex;
-    gap: 10px;
-}
-
-.input-field{
-    font-size: 15px;
-    background: rgba(255, 255, 255, 0.2);
-    color: #fff;
-    height: 50px;
-    width: 100%;
-    padding: 0 10px 0 45px;
-    border: none;
-    border-radius: 40px;
-    outline: none;
-    transition: .2s ease;
-}
-
 .input-box input{
     background: transparent;
     border: none;
@@ -89,9 +70,10 @@ body{
     border-radius: 40px;
     color: #fff;
     padding: 20px 45px 20px 40px; 
+    width: 100%;
 }
 
- .btn{
+.btn{
     margin-left: 23%;
     width: 50%;
     height: 45px;
@@ -104,11 +86,7 @@ body{
     font-size: 16px;
     color: #333;
     font-weight: 600;
-    margin-top: 10px;
-}
-.btn a{
-    text-decoration: none;
-    color: black;
+    margin-top: 30px;
 }
 
 .input-box input::placeholder{
@@ -118,11 +96,16 @@ body{
 .input-field:hover, .input-field:focus{
     background: rgba(255, 255, 255, 0.4);
 }
+
+.input-field{
+    font-weight: bold;
+}
+
 .input-box i{
     position: relative;
     color: #fff;
     left: 17px;
-    top:-26px;
+    top:-30px;
     font-size: 22px;
     transform: translateY(-50%);
  }
@@ -131,39 +114,9 @@ body{
     background: transparent;
 }
 
-.submit{
-    margin-left: 23%;
-    width: 50%;
-    height: 45px;
-    background: #fff;
-    border: none;
-    outline: none;
-    border-radius: 40px;
-    box-shadow: 0 0 10px rgba(O, 0, 0, 1);
-    cursor: pointer;
-    font-size: 16px;
-    color: #333;
-    font-weight: 600;
-    margin-top: 10px;
-}
-
-.two-cols{
-    display: flex;
-    justify-content: space-between;
-    font-size: 15px;
-    margin: -15px 0 15px;
-    color: #fff;
-   
-}
-
-.one{
+.remember_me{
     accent-color: #fff;
-    margin-right: 3px;
-}
-
-.two-cols a, .two a{
-    text-decoration: none;
-    color: #fff;
+    margin-left: 10px;
 }
 
 .two-cols a:hover{
@@ -172,6 +125,7 @@ body{
 .two{
     text-align: center;
     padding-top: 6%;
+    text-decoration: none;
 }
 
 

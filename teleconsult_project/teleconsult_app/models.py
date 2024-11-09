@@ -3,24 +3,10 @@ from django.core.validators import MinLengthValidator
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.models import User
 
-# Create your models here.
-class Medecins(models.Model):
-    nom = models.CharField(max_length=100)
-    specialite = models.CharField(max_length=100)
-    email = models.EmailField(default='example@example.com')  # Fournir une valeur par défaut
-    photo = models.ImageField(upload_to='images/')
-    age = models.IntegerField(default=1)
-    
-
-class Exams(models.Model):
-    nom = models.CharField(max_length=100)
-    prix = models.IntegerField()
-    photo = models.ImageField(upload_to='images/')
-    deplacement = models.IntegerField(blank=True, default=0)
-    total = models.IntegerField(default=0)
-        
+# Create your models here
+# Dans models.py
 class Patients(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)  # Relation avec le modèle User
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     nom_prenom = models.CharField(max_length=100)
     age = models.IntegerField(null=True, blank=True)
     telephone = models.BigIntegerField(null=True, blank=True)
@@ -28,7 +14,35 @@ class Patients(models.Model):
 
     def __str__(self):
         return self.nom_prenom
-    
+
+    @property
+    def user_type(self):
+        return "patient"
+
+
+class Medecins(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    nom = models.CharField(max_length=100)
+    specialite = models.CharField(max_length=100)
+    email = models.EmailField(default='example@example.com')
+    photo = models.ImageField(upload_to='images/', null=True, blank=True)
+    age = models.IntegerField(default=1)
+    is_active = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.nom
+
+    @property
+    def user_type(self):
+        return "medecin"
+
+
+class Exams(models.Model):
+    nom = models.CharField(max_length=100)
+    prix = models.IntegerField()
+    photo = models.ImageField(upload_to='images/')
+    deplacement = models.IntegerField(blank=True, default=0)
+    total = models.IntegerField(default=0)
 
 class Rendezvous(models.Model):
     medecin = models.ForeignKey(Medecins, on_delete=models.CASCADE)

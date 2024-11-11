@@ -5,20 +5,6 @@ from django.contrib.auth.models import User
 
 # Create your models here
 # Dans models.py
-class Patients(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
-    nom_prenom = models.CharField(max_length=100)
-    age = models.IntegerField(null=True, blank=True)
-    telephone = models.BigIntegerField(null=True, blank=True)
-    email = models.EmailField(null=True, blank=True)
-
-    def __str__(self):
-        return self.nom_prenom
-
-    @property
-    def user_type(self):
-        return "patient"
-
 
 class Medecins(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
@@ -43,7 +29,22 @@ class Exams(models.Model):
     photo = models.ImageField(upload_to='images/')
     deplacement = models.IntegerField(blank=True, default=0)
     total = models.IntegerField(default=0)
+    
+    
+class Patients(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    nom_prenom = models.CharField(max_length=100)
+    age = models.IntegerField(null=True, blank=True)
+    telephone = models.BigIntegerField(null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
 
+    def __str__(self):
+        return self.nom_prenom
+
+    @property
+    def user_type(self):
+        return "patient"
+    
 class Rendezvous(models.Model):
     medecin = models.ForeignKey(Medecins, on_delete=models.CASCADE)
     patient = models.ForeignKey(Patients, on_delete=models.CASCADE, null=True) 

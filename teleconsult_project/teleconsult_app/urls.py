@@ -4,7 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('', views.home, name='home'),
+    path('', views.home, name='home_patient'),
     path('logoutuser/', views.logoutuser, name='logoutuser'),
     path('about/', views.about, name='about'),
     path('generaliste/', views.generaliste, name='generaliste'),
@@ -30,7 +30,7 @@ urlpatterns = [
     path('profil/', views.profil, name='profil'),
     path('update_profile_picture/', views.update_profile_picture, name='update_profile_picture'),
     path('register_doctor/', views.register_doctor, name='register_doctor'),
-    path('home/patient/', views.home, name='home_patient'),
+    # path('home/patient/', views.home, name='home_patient'),
     path('home/doctor/', views.home_doctor, name='home_doctor'),
     path('activate_medecin/<int:medecin_id>/', views.activate_medecin, name='activate_medecin'),
     # path('admin_dashboard/', views.admin_dashboard, name='admin_dashboard'),

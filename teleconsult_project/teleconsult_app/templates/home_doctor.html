@@ -14,32 +14,46 @@
       <!-- Sidebar -->
       <nav class="sidebar">
         <div class="sidebar-header">
-          <a href="#"><img src="{% static 'images/1.png' %}" alt="Logo" width="70" height="55" /></a>
-          <h4>Tableau de Bord</h4>
+            <a href="exams"><img src="{% static 'images/1.png' %}" alt="Logo" width="70" height="55" /></a>
+            <h4>Tableau de Bord</h4>
         </div>
-        <ul class="nav flex-column">
-          <li>
-            <div class="btn-group dropdown">
-              <button type="button" class="btn  dropdown-toggle nav-link" data-bs-toggle="dropdown" aria-expanded="false">Consulter</button>
-              <ul class="dropdown-menu">
-                <a href="{% url 'generaliste' %}" class="dropdown-item  nav-link">Généralistes</a>
-                <a href="{% url 'specialiste' %}" class="dropdown-item nav-link">Spécialistes</a>
-              </ul>
-            </div>
-          </li>
-          
-          <li class="nav-item">
-            <a href="{% url 'exams' %}" class="nav-link"><i class="bx bx-test-tube"></i> Examens</a>
-          </li>
-          <li class="nav-item">
-            <a href="{% url 'pharmacie' %}" class="nav-link"><i class="bx bx-capsule"></i> Pharmacie</a>
-          </li>
-          <li class="nav-item">
-            <a href="{% url 'setting' %}" class="nav-link"><i class="bx bx-cog"></i> Paramètres</a>
-          </li>
-          <li class="nav-item">
-            <a href="{% url 'contact' %}" class="nav-link"><i class="bx bx-envelope"></i> Contact</a>
-          </li>
+        <ul  class="nav flex-column">
+            <!-- Patients Section -->
+            <li class="nav-item">
+                <a href="{% url 'exams' %}" class="nav-link"><i class="bx bx-user"></i> Patients</a>
+            </li>
+            
+            <!-- Dossier Médical Section -->
+            <li class="nav-item">
+                <a href="{% url 'exams' %}" class="nav-link"><i class="bx bx-folder-open"></i> Dossier Médical</a>
+            </li>
+    
+            <!-- Rendez-vous Section -->
+            <li class="nav-item">
+                <a href="{% url 'exams' %}" class="nav-link"><i class="bx bx-calendar"></i> Rendez-vous</a>
+            </li>
+    
+            <!-- Prescriptions Médicales Section -->
+            <li class="nav-item">
+                <a href="{% url 'exams' %}" class="nav-link"><i class="bx bx-receipt"></i> Prescriptions Médicales</a>
+            </li>
+    
+            <!-- Messagerie et Communication Section -->
+            <li class="nav-item">
+                <a href="{% url 'exams' %}" class="nav-link"><i class="bx bx-envelope"></i> Messagerie</a>
+            </li>
+  
+            <!-- Facturation et Paiements Section -->
+            <li class="nav-item">
+                <a href="{% url 'exams' %}" class="nav-link"><i class="bx bx-wallet"></i> Facturation</a>
+            </li>
+    
+            <!-- Rapports et Analyses Section -->
+            <li class="nav-item">
+                <a href="{% url 'exams' %}" class="nav-link"><i class="bx bx-bar-chart"></i> Rapports et Analyses</a>
+            </li>
+  
+            <!-- Logout/Login Section -->
           {% if user.is_authenticated %}
             <li class="nav-item">
               <a href="{% url 'logoutuser' %}" class="nav-link"><i class="bx bx-log-out"></i> Déconnexion</a>
@@ -50,37 +64,54 @@
             </li>
           {% endif %}
         </ul>
-      </nav>
+    </nav>
+    
 
       <!-- Main Content -->
       <div class="main-content">
-        <header class="main-header">
-          <h1>Bienvenue, Dr. {{ user.username }}</h1>
+        <header class="main-header text-center">
+          <h1 class="fw-bold">Bienvenue, Dr. {{ user.username }}</h1>
         </header>
 
         <!-- Dashboard Cards -->
-        <section class="dashboard-cards cols-m-2">
+        <section class="dashboard-cards row-2">
           <div class="card">
             <h3>Examens</h3>
-            <p>Suivi des examens</p>
+            <p>Dans cette rubrique vous en tant que praticien vous pouvez egalement passer un examen en fonction d'une prescription</p>
             <a href="{% url 'exams' %}" class="btn btn-primary">Voir</a>
           </div>
 
           <div class="card">
             <h3>Pharmacie</h3>
-            <p>Pharmacie</p>
+            <p>Nous vous autorisons à jeter un coup d'oeil dans notre pharmacie pour vos differents achats</p>
             <a href="{% url 'pharmacie' %}" class="btn btn-primary">Voir</a>
           </div>
 
           <div class="card">
-            <h3>Parametre</h3>
-            <p>parametre</p>
+            <h3>Consulter</h3>
+            <p>Vous en tant que praticien il vous ait possible de consulter notre liste de praticien et de se faire consulter si besoin</p>
+            <div class="d-flex justify-content-around">
+              <a href="{% url 'generaliste' %}" class="btn btn-primary">Généraliste</a>
+              <a href="{% url 'specialiste' %}" class="btn btn-primary">Spécialiste</a>
+            </div>
+          </div>
+
+
+          <div class="card">
+            <h3>Paramètres</h3>
+            <p>Acceder aux differents Paramètress liés à votre compte et efectuer les changements desirés</p>
             <a href="{% url 'setting' %}" class="btn btn-primary">Voir</a>
           </div>
 
           <div class="card">
             <h3>Contact</h3>
-            <p>Contact</p>
+            <p>Contact nous en cas de préocupation ou pour d'eventuelle suggestion visant à améliorer l'experience des utilisateurs</p>
+            <a href="{% url 'contact' %}" class="btn btn-primary">Voir</a>
+          </div>
+
+          <div class="card">
+            <h3>Contact</h3>
+            <p>Contactez nous en cas de préocupation ou pour d'eventuelle suggestion visant à améliorer l'experience des utilisateurs</p>
             <a href="{% url 'contact' %}" class="btn btn-primary">Voir</a>
           </div>
         </section>

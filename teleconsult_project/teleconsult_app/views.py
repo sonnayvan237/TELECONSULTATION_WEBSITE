@@ -68,7 +68,7 @@ def specialiste(request):
 def logoutuser(request):
     logout(request)
     messages.success(request, 'tu es maintenant deconnecte')
-    return redirect('home')
+    return redirect('home_patient')
 
 #########################
 # affichage de a page des examens
@@ -85,7 +85,7 @@ def historique(request):
     patient_id = request.user.id
 
     # Filtrer les rendez-vous par patient
-    rendezvous_list = Rendezvous.objects.filter(patient_id=patient_id)
+    rendezvous_list = Rendezvous.objects.filter(patient_id=(patient_id-2))
     ordonnance = Ordonnances.objects.filter(patient_id=patient_id)   
     # Contexte pour le template
     context = {
@@ -238,16 +238,18 @@ def update_exam(request, id):
 # prise de rendezvous et appel consultation video
 @login_required
 def consultation(request, id):
-    print(f"User is authenticated: {request.user.is_authenticated}")  # Pour le débogage
     # Récupération du médecin par son ID
     medecin = get_object_or_404(Medecins, id=id)
-    
-    # Récupérer l'ID du patient à partir de l'utilisateur connecté
-    patient_id = request.user.id  # On utilise l'ID de l'utilisateur connecté
-    print("l'id du patient est:", patient_id)
+
+    # Récupérer l'objet patient associé à l'utilisateur connecté
+    try:
+        patient = Patients.objects.get(user=request.user)
+    except Patients.DoesNotExist:
+        messages.error(request, "Aucun patient associé à cet utilisateur.")
+        return redirect('home')  # Redirigez ou affichez un message d'erreur si nécessaire
+
     form = RendezVousForm(request.POST or None)
 
-    # Gérer la réservation du rendez-vous
     if request.method == 'POST' and form.is_valid():
         jour = form.cleaned_data['jour']
         heure = form.cleaned_data['heure']
@@ -259,28 +261,25 @@ def consultation(request, id):
             # Création d'une nouvelle instance de rendez-vous
             rendez_vous = form.save(commit=False)
             rendez_vous.medecin = medecin
-            rendez_vous.patient_id = patient_id  # Stocker l'ID du patient ici
+            rendez_vous.patient = patient  # Utiliser l'objet patient récupéré
             rendez_vous.save()
             messages.success(request, "Rendez-vous réservé avec succès!")
             return redirect('consultation_option_specialiste', id=id)
 
-    # Convertir les rendez-vous réservés en un dictionnaire avec des clés formatées "jour-heure"
+    # Création du dictionnaire des rendez-vous réservés
     rendezvous_liste = Rendezvous.objects.filter(medecin=medecin)
     appointments = {f"{rdv.jour}-{rdv.heure.strftime('%H:%M')}": True for rdv in rendezvous_liste}
 
-    # Passer les jours et heures pour afficher un calendrier
-    jours = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi']
-    heures = ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00']
-
-    # Context pour le template
+    # Contexte pour le template
     context = {
         'medecin': medecin,
         'form': form,
-        'jours': jours,
-        'heures': heures,
+        'jours': ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi'],
+        'heures': ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00'],
         'appointments': appointments,
     }
     return render(request, 'consultation_option_spé.html', context)
+
 
 @login_required
 def delete_rendezvous(request, medecin_id, jour, heure):
@@ -290,7 +289,7 @@ def delete_rendezvous(request, medecin_id, jour, heure):
     patient_id = request.user.id
 
     # Filtrer les rendez-vous par patient
-    rendez_vous = Rendezvous.objects.filter(medecin=medecin, patient_id=patient_id, jour=jour, heure=heure).first()
+    rendez_vous = Rendezvous.objects.filter(medecin=medecin, patient = Patients.objects.get(user=request.user), jour=jour, heure=heure).first()
     if rendez_vous:
         # Supprimer le rendez-vous
         rendez_vous.delete()

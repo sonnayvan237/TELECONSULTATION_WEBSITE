@@ -41,11 +41,11 @@ body, html {
 }
 
 .nav {
-  margin-top: 30px;
+  margin-top: 15px;
 }
 
 .nav-item {
-  margin: 10px 0;
+  margin: 6px 0;
 }
 
 .nav-link {
@@ -79,31 +79,31 @@ body, html {
 }
 
 .main-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+
   margin-bottom: 20px;
 }
 
 .main-header h1 {
-  font-size: 24px;
   color: #343a40;
 }
 
 /* Dashboard Cards */
 .dashboard-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Espacement entre les cartes */
+  padding: 20px;
 }
 
 .card {
-  background-color: #ffffff;
+  flex: 1 1 calc(33.333% - 20px); /* Largeur de chaque carte en tenant compte de l'espacement */
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
   border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px;
   text-align: center;
 }
+
 
 .card h3 {
   color: #343a40;

@@ -42,11 +42,37 @@ def contact(request):
     return render(request, 'contact_us.html')
 
 #######################
+#Affiche des patients:
+@login_required
+def patient_list(request):
+    # Vérifier si l'utilisateur connecté est bien un médecin
+    try:
+        medecin = Medecins.objects.get(user=request.user)
+    except Medecins.DoesNotExist:
+        # Si l'utilisateur n'est pas un médecin, rediriger ou afficher un message
+        messages.error(request, "Accès refusé. Cette page est réservée aux médecins.")
+        return redirect('login')
+
+    # Récupérer les patients ayant un rendez-vous avec le médecin connecté
+    patients_ids = Rendezvous.objects.filter(medecin=medecin).values_list('patient_id', flat=True).distinct()
+    patients = Patients.objects.filter(id__in=patients_ids)
+
+    # Récupérer les rendez-vous pour chaque patient et organiser les données
+    patients_rendezvous = []
+    for patient in patients:
+        rendezvous = Rendezvous.objects.filter(medecin=medecin, patient=patient)
+        patients_rendezvous.append({
+            'patient': patient,
+            'rendezvous': rendezvous
+        })
+
+    return render(request, 'patient.html', {'patients_rendezvous': patients_rendezvous})
+
+#######################
 #Profil utilisateur
 def profil(request):
     patient = get_object_or_404(Patients, user=request.user)  # Utilisation de la relation OneToOne avec user
     return render(request, 'profil.html', {'patient': patient})
-
 
 ########################
 #affichage des medecins
@@ -246,7 +272,7 @@ def consultation(request, id):
         patient = Patients.objects.get(user=request.user)
     except Patients.DoesNotExist:
         messages.error(request, "Aucun patient associé à cet utilisateur.")
-        return redirect('home')  # Redirigez ou affichez un message d'erreur si nécessaire
+        return redirect('home_patient')  # Redirigez ou affichez un message d'erreur si nécessaire
 
     form = RendezVousForm(request.POST or None)
 
@@ -412,7 +438,6 @@ def login(request):
 
 #######################
 # page d'acceuil
-
 def home(request):
     services = [
         {
@@ -586,12 +611,34 @@ def register_doctor(request):
 
     return render(request, 'register_like_doctor.html')
 
+#####################
+# decorateur pour restreindre l'acces aux utilisateurs qui ne sont pas des medecins a la page home_doctor
+def doctor_required(view_func):
+    def wrapper(request, *args, **kwargs):
+        # Vérifier que l'utilisateur est connecté et est un médecin
+        if request.user.is_authenticated:
+            try:
+                # Essayer de récupérer l'objet Medecins correspondant à l'utilisateur connecté
+                Medecins.objects.get(user=request.user)
+                # Si trouvé, c'est un médecin; continuer vers la vue
+                return view_func(request, *args, **kwargs)
+            except Medecins.DoesNotExist:
+                # Si l'utilisateur n'est pas un médecin, rediriger avec un message d'erreur
+                messages.error(request, "Accès refusé. Cette page est réservée aux médecins.")
+                return redirect('login')
+        else:
+            # Si l'utilisateur n'est pas connecté, rediriger vers la page de connexion
+            return redirect('login')
 
+    return wrapper
+
+@doctor_required
 @login_required
 def home_doctor(request):
     # Vue pour la page d'accueil des médecins
     return render(request, 'home_doctor.html')
 
+@login_required
 def activate_medecin(request, medecin_id):
     medecin = get_object_or_404(Medecins, id=medecin_id)
     # Alterner le statut actif

@@ -1,0 +1,129 @@
+/* Fichier: home.css */
+
+/* Couleurs principales */
+:root {
+    --primary-color: #1E90FF;   /* Bleu principal */
+    --secondary-color: #87CEFA; /* Bleu clair */
+    --hover-color: #4682B4;     /* Bleu foncé */
+    --text-color: #333333;      /* Gris foncé */
+    --background-color: #F0F8FF; /* Blanc cassé */
+}
+
+/* Global */
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+}
+
+/* Barre de recherche */
+.input-box {
+    width: 50%;
+    margin: 20px auto;
+    position: relative;
+}
+
+.input-box input {
+    width: 100%;
+    padding: 12px 20px;
+    padding-left: 40px;
+    font-size: 16px;
+    border-radius: 25px;
+    border: 1px solid var(--secondary-color);
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(30, 144, 255, 0.1);
+    transition: border-color 0.3s ease;
+}
+
+.input-box input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+.input-box i {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: var(--secondary-color);
+}
+
+/* Tableau */
+table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(30, 144, 255, 0.15);
+}
+
+table thead {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    font-weight: bold;
+}
+
+table th, table td {
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid var(--secondary-color);
+}
+
+table tbody tr:hover {
+    background-color: var(--secondary-color);
+    color: #ffffff;
+    cursor: pointer;
+}
+
+table th {
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+table td {
+    font-size: 15px;
+    color: var(--text-color);
+}
+
+table td p {
+    margin: 5px 0;
+}
+
+/* Bouton */
+button {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: var(--hover-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    table, .input-box {
+        width: 90%;
+    }
+
+    table th, table td {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .input-box input {
+        font-size: 14px;
+    }
+}

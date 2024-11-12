@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tableau de Bord Médecin</title>
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/home_doctor.css' %}" />
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
   </head>
   <body>
@@ -20,7 +20,7 @@
         <ul  class="nav flex-column">
             <!-- Patients Section -->
             <li class="nav-item">
-                <a href="{% url 'exams' %}" class="nav-link"><i class="bx bx-user"></i> Patients</a>
+                <a href="{% url 'patient_list' %}" class="nav-link"><i class="bx bx-user"></i> Patients</a>
             </li>
             
             <!-- Dossier Médical Section -->
@@ -41,16 +41,6 @@
             <!-- Messagerie et Communication Section -->
             <li class="nav-item">
                 <a href="{% url 'exams' %}" class="nav-link"><i class="bx bx-envelope"></i> Messagerie</a>
-            </li>
-  
-            <!-- Facturation et Paiements Section -->
-            <li class="nav-item">
-                <a href="{% url 'exams' %}" class="nav-link"><i class="bx bx-wallet"></i> Facturation</a>
-            </li>
-    
-            <!-- Rapports et Analyses Section -->
-            <li class="nav-item">
-                <a href="{% url 'exams' %}" class="nav-link"><i class="bx bx-bar-chart"></i> Rapports et Analyses</a>
             </li>
   
             <!-- Logout/Login Section -->

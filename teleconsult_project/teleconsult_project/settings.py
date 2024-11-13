@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 
+SESSION_COOKIE_AGE = 600  # Expire après 5 minutes (300 secondes)
+SESSION_SAVE_EVERY_REQUEST = True  # Renouvelle la session à chaque requête
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -132,6 +135,4 @@ LOGIN_URL = 'login'  # Utilisez le nom de l'URL de votre vue de connexion
 
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Utiliser la base de données pour stocker les sessions
-SESSION_COOKIE_AGE = 1209600  # Durée de la session (2 semaines, par exemple)
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Maintenir la session même si l'onglet est fermé
 

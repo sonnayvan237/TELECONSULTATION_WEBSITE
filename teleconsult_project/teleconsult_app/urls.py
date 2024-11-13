@@ -25,14 +25,15 @@ urlpatterns = [
     path('setting/', views.setting, name='setting'),
     path('soumission_ordonnance/', views.soumis_ordonnance, name='soumission_ordonnance'), 
     path('deplacement/<int:id>/', views.deplacement, name='deplacement'),
-    path('delete_rendezvous/<int:medecin_id>/<str:jour>/<str:heure>/', views.delete_rendezvous, name='delete_rendezvous'),
+    path('delete_rendezvous/<int:medecin_id>/', views.delete_rendezvous, name='delete_rendezvous'),
+    path('delete_rendezvous_doctor/<int:rendezvous_id>/', views.delete_rendezvous_doctor, name='delete_rendezvous_doctor'),
     path('delete_ordonnance/<int:ordonnance_id>/', views.delete_ordonnance, name='delete_ordonnance'),
     path('profil/', views.profil, name='profil'),
     path('update_profile_picture/', views.update_profile_picture, name='update_profile_picture'),
     path('register_doctor/', views.register_doctor, name='register_doctor'),
     path('home/doctor/', views.home_doctor, name='home_doctor'),
     path('activate_medecin/<int:medecin_id>/', views.activate_medecin, name='activate_medecin'),
-    path('patient_list/', views.patient_list, name='patient_list'),
+    path('rendezvous/', views.rendezvous, name='rendezvous'),
     
     
     ######################

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/patient.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/rendezvous.css' %}" />
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <title>Patient</title>
@@ -39,12 +39,19 @@
                     <td>{{ item.patient.telephone }}</td>
                     <td>
                         <!-- Afficher les rendez-vous du patient -->
-                        {% for rdv in item.rendezvous %}
-                            <p>{{ rdv.jour }} - {{ rdv.heure|time:"H:i" }}</p>
-                        {% empty %}
-                            <p>Aucun rendez-vous</p>
-                        {% endfor %}
+                    {% for rdv in item.rendezvous %}
+                        <p>
+                            {{ rdv.jour }} - {{ rdv.heure|time:"H:i" }}
+                            <a href="{% url 'delete_rendezvous_doctor' rdv.id %}" class="text-danger">
+                                <i class="bx bx-trash icon"></i>
+                            </a>
+                        </p>
+                    {% empty %}
+                        <p>Aucun rendez-vous</p>
+                    {% endfor %}
+                    
                     </td>
+                    
                 </tr>
             {% endfor %}
         </tbody>

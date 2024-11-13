@@ -59,7 +59,7 @@
                         <td>
                             {% with key=jour|add:"-"|add:heure %}
                                 {% if key in appointments %}
-                                    <a href="{% url 'delete_rendezvous' medecin.id jour heure %}" class="booked p-2">Réservé</a>
+                                    <a href="{% url 'delete_rendezvous' medecin.id %}" class="booked p-2">Réservé</a>
                                 {% else %}
                                     Libre
                                 {% endif %}

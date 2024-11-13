@@ -12,7 +12,7 @@ import re
 def admin_required(user):
     return user.is_superuser
 
-######################
+#############################################################################################################
 #definition des root de toutes les pages
 def about(request):
     return render(request, 'about.html')
@@ -41,40 +41,38 @@ def call_specialiste(request):
 def contact(request):
     return render(request, 'contact_us.html')
 
-#######################
+#############################################################################################################
 #Affiche des patients:
 @login_required
-def patient_list(request):
-    # Vérifier si l'utilisateur connecté est bien un médecin
+def rendezvous(request):
     try:
         medecin = Medecins.objects.get(user=request.user)
     except Medecins.DoesNotExist:
-        # Si l'utilisateur n'est pas un médecin, rediriger ou afficher un message
         messages.error(request, "Accès refusé. Cette page est réservée aux médecins.")
         return redirect('login')
 
     # Récupérer les patients ayant un rendez-vous avec le médecin connecté
     patients_ids = Rendezvous.objects.filter(medecin=medecin).values_list('patient_id', flat=True).distinct()
     patients = Patients.objects.filter(id__in=patients_ids)
-
-    # Récupérer les rendez-vous pour chaque patient et organiser les données
+    
+    # Créer une liste de dictionnaires associant les patients à leurs rendez-vous
     patients_rendezvous = []
     for patient in patients:
         rendezvous = Rendezvous.objects.filter(medecin=medecin, patient=patient)
-        patients_rendezvous.append({
-            'patient': patient,
-            'rendezvous': rendezvous
-        })
+        patients_rendezvous.append({'patient': patient, 'rendezvous': rendezvous})
 
-    return render(request, 'patient.html', {'patients_rendezvous': patients_rendezvous})
+    return render(request, 'rendezvous.html', {
+        'patients_rendezvous': patients_rendezvous,
+        'medecin': medecin  # Transmettre l'objet médecin au template
+    })
 
-#######################
+#############################################################################################################
 #Profil utilisateur
 def profil(request):
     patient = get_object_or_404(Patients, user=request.user)  # Utilisation de la relation OneToOne avec user
     return render(request, 'profil.html', {'patient': patient})
 
-########################
+#############################################################################################################
 #affichage des medecins
 @login_required
 def generaliste(request):
@@ -89,21 +87,21 @@ def specialiste(request):
     return render(request, 'specialiste.html', {'medecins': medecins})
 
 
-########################
+#############################################################################################################
 # Deconnexion
 def logoutuser(request):
     logout(request)
     messages.success(request, 'tu es maintenant deconnecte')
     return redirect('home_patient')
 
-#########################
+#############################################################################################################
 # affichage de a page des examens
 @login_required
 def exams(request):
     exams = Exams.objects.all()
     return render(request, 'exams.html', {'exams': exams})
 
-########################
+#############################################################################################################
 # gestion de l'historique
 @login_required
 def historique(request):
@@ -120,7 +118,7 @@ def historique(request):
     }
     return render(request, 'historique.html', context)
 
-######################
+#############################################################################################################
 # Suppression d'ordonnance
 def delete_ordonnance(request, ordonnance_id):
     ordonnance = get_object_or_404(Ordonnances, id=ordonnance_id, patient=request.user.id)
@@ -128,7 +126,7 @@ def delete_ordonnance(request, ordonnance_id):
     messages.success(request, "L'ordonnance a été supprimée avec succès.")
     return redirect('historique')
 
-################################
+#############################################################################################################
 #gestion des examens
 @login_required    
 def exams_option(request, id):   
@@ -155,7 +153,7 @@ def deplacement(request, id):
     return render(request, 'exams_option.html', {'element':element})
 
 
-#######################
+#########################################################################################################
 # operation d'ajout, de modification et de suppression des medecin
 @user_passes_test(admin_required)
 def add_or_update_medecin(request, id=None):
@@ -210,7 +208,7 @@ def update_medecin(request, id):
             return redirect("add_medecin")
         return render(request, 'ajout_medecin.html', {'medecin' : update}) 
     
-#######################
+###################################################################################################
 #page d'ajout, de modifications et de suppression des examens
 @user_passes_test(admin_required)
 def add_or_update_exams(request, id=None):
@@ -260,7 +258,7 @@ def update_exam(request, id):
             return redirect("add_exam")
         return render(request, 'ajout_exam.html', {'exam' : update}) 
     
-#######################
+#######################################################################################################
 # prise de rendezvous et appel consultation video
 @login_required
 def consultation(request, id):
@@ -307,25 +305,53 @@ def consultation(request, id):
     return render(request, 'consultation_option_spé.html', context)
 
 
+#################################################################################################
+#suppression des rendezvous par le patient
 @login_required
-def delete_rendezvous(request, medecin_id, jour, heure):
+def delete_rendezvous(request, medecin_id):
     # Rechercher le médecin
     medecin = get_object_or_404(Medecins, id=medecin_id)
-       # Récupérer l'ID du patient connecté (associé à l'utilisateur)
-    patient_id = request.user.id
-
+  
     # Filtrer les rendez-vous par patient
-    rendez_vous = Rendezvous.objects.filter(medecin=medecin, patient = Patients.objects.get(user=request.user), jour=jour, heure=heure).first()
-    if rendez_vous:
+    rendez_vous = Rendezvous.objects.filter(medecin=medecin, patient = Patients.objects.get(user=request.user)).first()
+    if rendez_vous and (medecin.specialite != 'Généraliste') :
         # Supprimer le rendez-vous
         rendez_vous.delete()
         messages.success(request, "Le rendez-vous a été annulé avec succès.")
+        return redirect('consultation_option_specialiste', id=medecin_id)
+    
+    elif rendez_vous and (medecin.specialite == 'Généraliste') :
+         # Supprimer le rendez-vous
+        rendez_vous.delete()
+        messages.success(request, "Le rendez-vous a été annulé avec succès.")
+        return redirect('consultation_option_généraliste', id=medecin_id)
     else :
         messages.success(request, "Vous ne pouvez supprimer ce car ce n'est pas un rendez vous que vous avez reservé")
     # Rediriger vers la page de consultation du médecin
-    return redirect('consultation_option_specialiste', id=medecin_id)
+    return render(request, '')
+        
 
-#######################
+#suppression des rendezvous par le praticien
+@login_required
+def delete_rendezvous_doctor(request, rendezvous_id):
+    # Vérifier si l'utilisateur connecté est un médecin
+    try:
+        medecin = Medecins.objects.get(user=request.user)
+    except Medecins.DoesNotExist:
+        messages.error(request, "Accès refusé. Cette page est réservée aux médecins.")
+        return redirect('login')
+
+    # Récupérer le rendez-vous en fonction de l'ID
+    rendez_vous = get_object_or_404(Rendezvous, id=rendezvous_id, medecin=medecin)
+    
+    # Supprimer le rendez-vous
+    rendez_vous.delete()
+    messages.success(request, "Le rendez-vous a été supprimé avec succès.")
+
+    # Redirection vers la page des rendez-vous ou la liste des patients du médecin
+    return redirect('rendezvous')  # Rediriger vers la vue de la liste des patients ou une autre page du médecin
+
+#############################################################################################################
 #soumission d'ordonnace
 @login_required
 def soumis_ordonnance(request):
@@ -346,7 +372,7 @@ def soumis_ordonnance(request):
     return render(request, 'soumission_ordonnance.html', {'ordonnances': ordonnances})
 
 
-#######################
+#############################################################################################################
 # page d'enregistrement(register)
 def register(request):
     if request.method == 'POST':
@@ -393,7 +419,7 @@ def register(request):
 
     return render(request, 'register.html')
 
-#######################
+#############################################################################################################
 #page de connexion(login)
 def login(request):
     if request.method == 'POST':
@@ -436,7 +462,7 @@ def login(request):
 
     return render(request, 'login.html')
 
-#######################
+#############################################################################################################
 # page d'acceuil
 def home(request):
     services = [
@@ -546,7 +572,7 @@ def home(request):
     return render(request, 'home.html', {'daily_health_tips': daily_health_tips,'services': services, 'engagements': engagements, 'specialistes': specialistes})
 
 
-####################
+#############################################################################################################
 # Ajout de la photo de profil
 @login_required
 def update_profile_picture(request):
@@ -611,7 +637,7 @@ def register_doctor(request):
 
     return render(request, 'register_like_doctor.html')
 
-#####################
+#############################################################################################################
 # decorateur pour restreindre l'acces aux utilisateurs qui ne sont pas des medecins a la page home_doctor
 def doctor_required(view_func):
     def wrapper(request, *args, **kwargs):

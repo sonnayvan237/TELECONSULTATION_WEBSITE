@@ -14,13 +14,7 @@
         {% csrf_token %}
         <div class="form-box">
             <div class="wrapper">
-                <h1>Login</h1> <br>
-                
-                {% if messages %}
-                    {% for message in messages %}
-                            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-                    {% endfor %}
-                {% endif %}  
+                <h1>Login</h1> <br> 
                 <div class="input-box">
                     <input type="text" id="FirstnameInput" class="input-field" placeholder="username" name="username" required>
                     <i class='bx bxs-user'></i>

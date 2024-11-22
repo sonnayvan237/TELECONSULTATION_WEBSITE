@@ -28,8 +28,8 @@
 <div class="consulter">
     <h2 class="pb-4 pt-5 text-center text-dark fw-bold">Faites-vous consulter par notre spécialiste :</h2>
     <div class="text-center mt-4">
-        <a href="https://demo.campay.net/pay/frais-de-consultation-4235-1729426350-ARK/" class="me-5 p-2 rounded">Appel vidéo</a>
-        <a href="https://demo.campay.net/pay/frais-de-consultation-4235-1729426350-ARK/" class="ms-5 p-2 rounded">Appel audio</a>
+        <a href="{% url 'enregistrer_consultation' medecin_id=medecin.id consultation_type='video' %}" class="me-5 p-2 rounded">Appel vidéo</a>
+        <a href="{% url 'enregistrer_consultation' medecin_id=medecin.id consultation_type='audio' %}" class="ms-5 p-2 rounded">Appel audio</a>
     </div>
 </div>
 

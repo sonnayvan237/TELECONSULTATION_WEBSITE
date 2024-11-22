@@ -9,7 +9,7 @@
     <title>Historique</title>
 </head>
 <body>
-    <h1 class="text-center text-white fw-bold pt-5 pb-5">Historique utilisateur :</h1>
+    <h1 class="text-center text-dark fw-bold pt-5 pb-5">Historique utilisateur :</h1>
 
     <div>
         {% if rendezvous_list %}
@@ -21,7 +21,7 @@
                         <span>A la date du <strong> {{ rdv.jour }}</strong> de cette semaine</span><br>
                         <span>A <strong>{{ rdv.heure|time:"H:i" }}h précise</strong></span> <br>
                     </div>
-                    <form method="post" action="{% url 'delete_rendezvous' rdv.medecin.id rdv.jour rdv.heure|time:'H:i' %}">
+                    <form method="post" action="{% url 'delete_rendezvous' rdv.medecin.id  %}">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-primary btn-payer ms-5 mb-3">Supprimer</button>
                     </form>

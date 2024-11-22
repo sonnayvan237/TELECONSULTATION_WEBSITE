@@ -15,7 +15,7 @@ body{
 }
 .title{
     margin-left: 35%;
-    padding: 30px;
+    padding: 10px;
     font-weight: bold;
 }
 
@@ -30,7 +30,7 @@ body{
 }
 
 .info{
-    padding-top: 20px;
+    
     padding-bottom: 20px;
     margin-left: 15%;
     margin-right: 15%;
@@ -44,11 +44,13 @@ body{
     background-color: blue;
 }
 img{
-    margin-left: 30%;
+    margin-left: 40%;
+    width: 300px !important;
+    height: 180px;
 }
 .detail{
-    margin-left: 20%;
-    padding-top: 60px;
+    margin-left: 10%;
+    padding-top: 30px;
     display: flex;
     flex-direction: row; 
 }

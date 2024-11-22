@@ -1,11 +1,12 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from .models import Medecins,Exams,Rendezvous,Patients,Ordonnances,Profile
+from .models import Medecins,Exams,Rendezvous,Patients,Ordonnances,Profile,Consultation
 from django.contrib.auth import authenticate, login as auth_login,logout
 from .forms import RendezVousForm, ProfilePictureForm
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required,user_passes_test
+from django.utils import timezone
 import re
 
 
@@ -664,6 +665,8 @@ def home_doctor(request):
     # Vue pour la page d'accueil des médecins
     return render(request, 'home_doctor.html')
 
+################################################################################################
+# Confirmation du praticien dans le systeme
 @login_required
 def activate_medecin(request, medecin_id):
     medecin = get_object_or_404(Medecins, id=medecin_id)
@@ -673,3 +676,41 @@ def activate_medecin(request, medecin_id):
     status = "activé" if medecin.is_active else "désactivé"
     messages.success(request, f"Le statut de {medecin.nom} a été {status}.")
     return redirect('add_medecin')  # Redirigez vers la liste des médecins (ou autre page d'administration)
+
+######################################################################################################
+def enregistrer_consultation(request, medecin_id, consultation_type):
+    # Récupérer le patient connecté
+    patient = get_object_or_404(Patients, user=request.user)
+
+    # Récupérer le médecin concerné
+    medecin = get_object_or_404(Medecins, id=medecin_id)
+
+    # Créer et sauvegarder la consultation
+    consultation = Consultation.objects.create(
+        patient=patient,
+        medecin=medecin,
+        consultation_type=consultation_type,
+        date_enregistrement=timezone.now()
+    )
+
+    # Redirection vers le lien de paiement
+    if consultation_type == 'video':
+        return redirect("https://demo.campay.net/pay/frais-de-consultation-4235-1729426350-ARK/")
+    elif consultation_type == 'audio':
+        return redirect("https://demo.campay.net/pay/frais-de-consultation-4235-1729426350-ARK/")
+    
+@login_required
+def medecin_consultations(request):
+    try:
+        # Récupérer le médecin connecté
+        medecin = Medecins.objects.get(user=request.user)
+    except Medecins.DoesNotExist:
+        # Si l'utilisateur n'est pas un médecin, rediriger ou afficher un message
+        messages.error(request, "Accès refusé. Cette page est réservée aux médecins.")
+        return redirect('login')
+
+    # Récupérer les consultations associées au médecin
+    consultations = Consultation.objects.filter(medecin=medecin).order_by('-date_enregistrement')
+
+    # Passer les consultations au template
+    return render(request, 'medecin_consultations.html', {'consultations': consultations, 'medecin': medecin})

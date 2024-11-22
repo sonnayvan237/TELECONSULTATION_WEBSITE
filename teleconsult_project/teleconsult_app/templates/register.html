@@ -15,11 +15,6 @@
             <div class="register-container" id="register">
                 <div class="top">
                     <h1>Sign Up</h1> <br>
-                    {% if messages %}
-                        {% for message in messages %}
-                                <div class="alert alert-danger">{{ message }}</div>
-                        {% endfor %}
-                    {% endif %} 
                 </div>
                 <div class="input-box">
                     <input type="text" id="FirstnameInput" class="input-field" placeholder="Nom et prenom" name="nom_prenom" required>

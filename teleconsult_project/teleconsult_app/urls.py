@@ -34,7 +34,8 @@ urlpatterns = [
     path('home/doctor/', views.home_doctor, name='home_doctor'),
     path('activate_medecin/<int:medecin_id>/', views.activate_medecin, name='activate_medecin'),
     path('rendezvous/', views.rendezvous, name='rendezvous'),
-    
+    path('consultation/<int:medecin_id>/<str:consultation_type>/', views.enregistrer_consultation, name='enregistrer_consultation'),
+    path('mes_consultations/', views.medecin_consultations, name='medecin_consultations'),
     
     ######################
     #action sur le medecin

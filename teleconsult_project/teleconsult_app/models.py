@@ -1,8 +1,7 @@
 from django.db import models
 from django.core.validators import MinLengthValidator
-from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.models import User
-
+from django.utils import timezone
 # Create your models here
 # Dans models.py
 
@@ -68,3 +67,13 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
+    
+
+class Consultation(models.Model):
+    patient = models.ForeignKey('Patients', on_delete=models.CASCADE)
+    medecin = models.ForeignKey('Medecins', on_delete=models.CASCADE)
+    consultation_type = models.CharField(max_length=50, choices=[('video', 'Appel vidéo'), ('audio', 'Appel audio')])
+    date_enregistrement = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"{self.patient} - {self.medecin} - {self.consultation_type}"

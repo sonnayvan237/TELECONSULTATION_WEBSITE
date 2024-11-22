@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Roboto:wght@100;300;400;500&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "poppins", sans-serif;
+}
+
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa; /* Couleur de fond */
+    margin: 0;
+    padding: 0;
+    color: #343a40; /* Couleur principale du texte */
+}
+
+h2 {
+    color: #007bff; /* Couleur bleu pour le titre */
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Conteneur principal */
+.container {
+    background-color: #ffffff; /* Couleur blanche pour le contenu */
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre légère */
+}
+
+/* Table */
+.table {
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table th {
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    font-size: 16px;
+}
+
+.table td {
+    text-align: center;
+    padding: 12px;
+    vertical-align: middle;
+    font-size: 14px;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f2f2f2; /* Alternance de couleurs */
+}
+
+.table tbody tr:hover {
+    background-color: #dbe9f8; /* Survol d'une ligne */
+}
+
+/* Message de vide */
+.text-center {
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Boutons */
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    .table th, .table td {
+        font-size: 14px;
+        padding: 10px;
+    }
+}

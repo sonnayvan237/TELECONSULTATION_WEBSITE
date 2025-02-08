@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Roboto:wght@100;300;400;500&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "poppins", sans-serif;
+}
+
+body{
+    background-image: url(./../images/freepik-export-20240913063949C7YY.jpeg);
+}
+
+.card {
+    background-color: #f3f2f2 !important;
+    border-radius:30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    text-align: center;
+    align-items: center;
+}
+
+.card img {
+    width: 250px;
+    height: 250px;
+    margin-bottom: 20px;
+}
+
+.card h2 {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.card p {
+    font-size: 1em;
+    color: #333;
+}
+
+.libelle{
+    margin: 0% 10%;
+}
+
+.btn-consult {
+    margin-top: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.btn-consult:hover {
+    background-color: #0056b3;
+}
+
+.line{
+    background-color: #007bff !important;
+    color: blue;
+    width: 100%;
+    margin: 0 !important;    
+}

@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spécialistes</title>
+    <link rel="stylesheet" href="{% static 'css/specialiste.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+</head>
+
+<body class="ms-5 me-5">
+    <h3 class="text-center text-white fw-bold pt-4 pb-4 fs-1">Nos spécialistes: </h3>
+    <p class="text-center text-white fw-bold fs-5 libelle mb-5">Un médecin spécialiste est un professionnel de santé qui a suivi une formation approfondie dans un domaine médical
+    spécifique, lui permettant de diagnostiquer et de traiter des pathologies complexes. Grâce à son expertise, il apporte
+    des soins adaptés et personnalisés en fonction des besoins spécifiques de chaque patient.</p>
+    <div class="card-container" id="cardContainer" >
+
+            <div class="container mb-5">
+                <div class="row "> <!-- Utiliser g-4 pour espacer les cartes -->
+                    {% for medecin in medecins %}
+                    
+                        {% if medecin.specialite != "Généraliste" %}
+                            <div class="col-sm-6 col-md-4 col-lg-3 row-cols-1 g-4"> <!-- Chaque carte prendra une colonne -->
+                                <div class="card h-100">
+                                    <img src="{% static 'images/' %}{{ medecin.photo }}" class="card-img-top" alt="{{ medecin.nom }}">
+                                    <div class="card-body">
+                                        <h2 class="card-title">{{ medecin.nom }}</h2>
+                                        <h5 >{{medecin.specialite}}</h5>
+                                        <a href="{% url 'consultation_option_specialiste' medecin.id %}" class="btn btn-primary btn-consult">Consulter</a>
+                                    </div>
+                                    <div class="line">.</div>
+                                </div>
+                            </div>        
+                        {% endif %}
+                        
+                    {% endfor %}
+                </div>
+            </div>     
+    </div>
+</body>
+</html>

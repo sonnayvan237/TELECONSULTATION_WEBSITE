@@ -1,0 +1,362 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Roboto:wght@100;300;400;500&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "poppins", sans-serif;
+}
+/* navigation bar */
+.nav-item a{
+   padding-left: 20px;
+   padding-right: 20px;
+   font-weight: bold;
+}
+
+.navbar-brand{
+    margin-left: 30px;
+}
+
+.nav{
+    margin-left: 100px;
+}
+
+.user a{
+    text-decoration: none;
+    font-weight: bold;
+    color: white;
+    padding: 10px;
+    border: 1px solid rgb(0, 47, 255);
+    background-color: rgb(32, 72, 247);
+}
+/* section1 */
+.carousel-inner{
+    height: 570px;
+    width: 100%;   
+}
+.d-block{
+    height: 570px;
+    width: 100%;
+    object-fit: cover;
+}
+/* carousel img1 */
+.item1 h2{
+    position:absolute;
+    margin-left: 15%;
+    bottom:45%;
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+    font-size: 45px;
+}
+.item1 a{
+    position:absolute;
+    margin-left: 15%;
+    bottom:30%;
+    font-weight: bold;
+    color: rgb(255, 255, 255);
+    font-size: 25px;
+    text-decoration: none;
+    border: 1px solid blue;
+    background-color: blue;
+    padding: 10px;
+    border-radius: 10%;
+}
+/* carousel img2 */
+.item2 h2{
+    position:absolute;
+    bottom:40%;
+    font-weight: bold;
+    font-size: 45px;
+    margin-left: 55%;
+    color: rgb(255, 252, 252);  
+}
+
+.item2 a{
+    position:absolute;
+    margin-left: 55%;
+    bottom:25%;
+    font-weight: bold;
+    color: rgb(255, 255, 255);
+    font-size: 25px;
+    text-decoration: none;
+    border: 1px solid blue;
+    background-color: blue;
+    padding: 10px;
+    border-radius: 10%; 
+}
+/* carousel img3 */
+.item3 h2{
+    position:absolute;
+    bottom:40%;
+    font-weight: bold;
+    font-size: 40px;
+    margin-left: 55%;
+    color: rgb(255, 252, 252);
+}
+.item3 a{
+    position:absolute;
+    margin-left: 55%;
+    bottom:25%;
+    font-weight: bold;
+    color: rgb(255, 255, 255);
+    font-size: 25px;
+    text-decoration: none;
+    border: 1px solid blue;
+    background-color: blue;
+    padding: 10px;
+    border-radius: 10%;
+}
+/* carousel img4 */
+.item4 h2{
+    position:absolute;
+    bottom:42%;
+    font-weight: bold;
+    font-size: 40px;
+    margin-left: 52%;
+    color: rgb(255, 252, 252); 
+}
+
+.nav-link{
+    color: rgb(238, 56, 56) !important;
+}
+.item4 a{
+    position:absolute;
+    margin-left: 52%;
+    bottom:25%;
+    font-weight: bold;
+    color: rgb(255, 255, 255);
+    font-size: 25px;
+    text-decoration: none;
+    border: 1px solid blue;
+    background-color: blue;
+    padding: 10px;
+    border-radius: 10%;
+}
+
+/* carousel img5 */
+.item5 h2{
+    position:absolute;
+    bottom:40%;
+    font-weight: bold;
+    font-size: 40px;
+    margin-left: 55%;
+    color: rgb(255, 252, 252);
+}
+
+.item5 a{
+    position:absolute;
+    margin-left: 55%;
+    bottom:25%;
+    font-weight: bold;
+    color: rgb(255, 255, 255);
+    font-size: 25px;
+    text-decoration: none;
+    border: 1px solid blue;
+    background-color: blue;
+    padding: 10px;
+    border-radius: 10%;
+}
+
+.carousel{
+    padding-bottom: 50px;
+}
+/* section2 */
+.section2{
+    padding-bottom: 2%;
+    padding-top: 2%;
+}
+.grid-sect2 img{
+    width: 100px;
+    height: 100px;
+    margin-left: 35%;
+}
+
+.grid-sect2 h5{
+    text-align: center;
+    font-weight: bold;
+}
+.grid-sect2 p{
+    justify-content: center;
+    text-align: center;
+}
+.grid-sect2{
+    padding-top: 5%;
+    padding-bottom: 5%;
+    padding-left: 4%;
+    padding-right: 4%;
+    border: 0;
+}
+.title h3{
+    font-weight: bold;
+    text-align: center;
+    padding-bottom: 20px;
+    padding-top: 20px;
+}
+.card-group{
+    margin-left: 40px;
+    margin-right: 40px;
+}
+
+/* section3 pour les services */
+.section3{
+    /* background-color: rgb(133, 133, 133); */
+    background-image: url(./../images/freepik-export-20240913063949C7YY.jpeg);
+}
+
+
+.grid-sect3 img{
+    width: 100px;
+    height: 80px;
+    margin: 20px;
+  
+}
+.grid-sect3{
+    align-items: center;
+    background: transparent !important;
+    font-family: 'Times New Roman', Times, serif;
+}
+.grid-sect3:hover{
+    opacity: 80%;
+}
+
+.engagement-grid{
+    display: flex;
+    flex-direction: row;
+}
+
+/* section4 pour les engagements */
+
+
+/* section5 pour la liste des medecins */
+.section5{
+    background-image: url(./../images/freepik-export-20240913063949C7YY.jpeg);
+    padding-top: 40px;
+    padding-bottom: 50px;
+}
+
+.btn-primary{
+    background: rgb(61, 89, 182) !important;
+    border-color: rgb(61, 89, 182) !important;
+}
+
+/* section6 pour le footer */
+.footer {
+    background-color: #f4f4f4;
+    color: #333;
+    padding: 40px 20px;
+    border-top: 1px solid #ddd;
+}
+
+.footer-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-section {
+    flex: 1;
+    margin: 10px;
+    min-width: 100px;
+}
+
+.footer-section h4 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #007bff;
+}
+
+.footer-section p, .footer-section a {
+    font-size: 14px;
+    color: #333;
+    text-decoration: none;
+    margin-bottom: 10px;
+}
+
+.footer-section a:hover {
+    text-decoration: underline;
+}
+
+.footer-section ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.footer-section ul li {
+    margin-bottom: 10px;
+}
+
+.footer-section .social-icon {
+    display: inline-block;
+    margin-right: 10px;
+    color: #333;
+    text-decoration: none;
+}
+
+.footer-section .social-icon:hover {
+    color: #007bff;
+}
+
+.newsletter{
+    margin-left: 50%;
+    padding-bottom: 5%;
+}
+
+.newsletter form {
+    display: flex;
+    flex-direction: column;
+}
+
+.newsletter input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.newsletter button {
+    padding: 10px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.newsletter button:hover {
+    background-color: #0056b3;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+}
+
+.row{
+    margin: 0% !important;
+}
+.consult_link{
+    display: flex;
+    flex-direction: row;
+    margin-left: 36%;
+}
+
+.deconnexion{
+    text-decoration: none;
+    border: 1px rgb(231, 33, 33);
+    background-color: rgb(231, 33, 33);
+    padding: 7px;
+}
+
+
+
+
+
+
+
+

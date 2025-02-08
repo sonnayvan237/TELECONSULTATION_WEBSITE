@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+
+    {% block content %}
+    <h2>Tableau de Bord Administrateur</h2>
+
+    <div>
+        <a href="{% url 'add_medecin' %}" class="btn btn-primary">Ajouter un Médecin</a>
+        <a href="{% url 'add_examen' %}" class="btn btn-primary">Ajouter un Examen</a>
+    </div>
+    {% endblock %}
+
+</body>
+</html>

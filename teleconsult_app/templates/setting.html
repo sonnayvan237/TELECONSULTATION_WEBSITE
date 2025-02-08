@@ -1,0 +1,139 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setting</title>
+    <link rel="stylesheet" href="{% static 'css/setting.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body class="setting_body"> 
+    <h1 class="fw-bold fs-1 pt-5 pb-5 text-white mb-5">
+        <i class="fa-solid fa-gears" style="color: #ffffff;"></i>
+        Setting : 
+    </h1>
+   
+    <div class="mon_profil">
+        <h3>Mon profil</h3>
+        <div class="d-flex">
+            <i class="fa-regular fa-user" style="color: #000000;"></i>
+            <a href="#"> Mon compte</a>
+        </div>
+        <div class="d-flex">
+            <i class="fa-solid fa-pencil" style="color: #000000;"></i>
+            <a href="#"> Modifier mon profil </a>
+        </div>
+    </div>
+
+    <div class="ligne">.</div>
+    <div class="contact_support">
+        <h3>Contactez un support</h3>
+        <div class="d-flex">
+            <i class="fa-solid fa-headset" style="color: #000000;"></i>
+            <a href="#"> Parler à un agent</a>
+        </div>
+        <div class="d-flex">
+            <i class="fa-solid fa-earth-africa" style="color: #000000;"></i>
+            <a href="#"> Nous contacter</a>
+        </div>
+        <div class="d-flex">
+            <i class="fa-solid fa-circle-question" style="color: #000000;"></i>
+            <a href="#"> FAQs</a>
+        </div>
+    </div>
+
+    <div class="ligne">.</div>
+    <div class="Assurance_sinistre">
+        <h3>Assurance et sinistre</h3>
+        <div class="d-flex">
+            <i class="fa-solid fa-house-crack" style="color: #000000;"></i>
+            <a href="#"> Assurance</a>
+        </div>
+        <div class="d-flex">
+            <i class="fa-solid fa-person-breastfeeding" style="color: #000000;"></i>
+            <a href="#"> Mes requetes d'assurance</a>
+        </div>
+        <div class="d-flex">
+            <i class="fa-solid fa-folder" style="color: #000000;"></i>
+            <a href="#"> Documents et contrat</a>
+        </div>
+        <div class="d-flex">
+            <i class="fa-solid fa-triangle-exclamation" style="color: #000000;"></i>
+            <a href="#"> Déclarer un sinistre</a>
+        </div>
+    </div>
+
+    <div class="ligne">.</div>
+    <div class="liens_rapides">
+        <h3>Liens rapides</h3>
+        <div class="d-flex">
+            <i class="fa-solid fa-envelope-open-text" style="color: #000000;"></i>
+            <a href="#"> Forum de discussions</a>
+        </div>
+        <div class="d-flex">
+            <i class="fa-solid fa-flask-vial" style="color: #000000;"></i>
+            <a href="{% url 'exams' %}"> recherche de laboratoire</a>
+        </div>
+        <div class="d-flex">
+            <i class="fa-solid fa-prescription-bottle-medical" style="color: #000000;"></i>
+            <a href="#"> recherche de pharmacies</a>
+        </div>
+        <div class="d-flex">
+            <i class="fa-solid fa-address-card" style="color: #000000;"></i>
+            <a href="{% url 'about' %}"> A propos de nous</a>
+        </div>
+        <div class="d-flex">
+            <i class="fa-solid fa-hands-holding" style="color: #000000;"></i>
+            <a href="#"> termes & conditions d'utilisation</a>
+        </div>
+    </div>
+
+    <div class="ligne">.</div>
+    <div class="confidentialité_sécurite">
+        <h3>Confidentialité et sécurité</h3>
+        <div class="d-flex">
+            <i class="fa-solid fa-user-shield" style="color: #000000;"></i>
+            <div class="form-check form-switch form-check-reverse">
+                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+                <label class="form-check-label fw-bold"> 2FA</label>
+            </div>    
+        </div>
+        <div class="d-flex">
+            <i class="fa-solid fa-arrow-rotate-right" style="color: #000000;"></i>
+            <a href="#"> Changer le mot de passe </a>
+        </div>
+        <div class="d-flex">
+            <i class="fa-solid fa-fingerprint" style="color: #000000;"></i>
+            <div class="form-check form-switch form-check-reverse">
+                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+                <label class="form-check-label fw-bold"> Biométrie</label>
+            </div> 
+        </div>
+        <div class="d-flex">
+            <i class="fa-solid fa-file-signature" style="color: #000000;"></i>
+            <a href="#"> Ajouter/Modifier signature</a>
+        </div>
+    </div>
+
+        <div class="ligne">.</div>
+        <div class="Préferences_générales">
+            <h3>Préferences générales</h3>
+            <div class="d-flex">
+                <i class="fa-solid fa-language" style="color: #000000;"></i>
+                <div class="form-check form-switch form-check-reverse">
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+                    <label class="form-check-label fw-bold"> Changer de langue</label>
+                </div> 
+            </div>
+            <div class="d-flex">
+                <i class="fa-solid fa-right-from-bracket" style="color: #ff0000;"></i>
+                <a href="#" class="text-danger"> SE DECONNECTER</a>
+            </div>
+        </div> 
+    </div>
+    <div class="ligne">.</div>
+ <script src="https://kit.fontawesome.com/137edf487c.js" crossorigin="anonymous"></script>
+</body>
+</html>

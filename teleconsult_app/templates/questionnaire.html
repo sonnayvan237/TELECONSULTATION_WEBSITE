@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnostic Médical</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    
+    <style>
+        /* 🌈 Style général */
+        body {
+            background: linear-gradient(120deg, #a1c4fd, #fbc2eb); /* Dégradé dynamique */
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Arial', sans-serif;
+            animation: backgroundFade 5s infinite alternate;
+        }
+
+        @keyframes backgroundFade {
+            from { background-position: left; }
+            to { background-position: right; }
+        }
+
+        .container {
+            max-width: 650px;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        h2 {
+            text-align: center;
+            color: #007bff;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        /* 🌟 Style des inputs */
+        select, input, textarea {
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        select:hover, input:hover, textarea:hover {
+            background: white;
+            border-color: #007bff;
+            transform: scale(1.02);
+        }
+
+        select:focus, input:focus, textarea:focus {
+            background: white;
+            border-color: #007bff;
+            box-shadow: 0px 0px 10px rgba(0, 123, 255, 0.3);
+            transform: scale(1.03);
+        }
+
+        /* 🔘 Bouton stylé */
+        .btn-primary {
+            background: linear-gradient(135deg, #007bff, #6610f2);
+            border: none;
+            padding: 14px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #6610f2, #007bff);
+            transform: scale(1.05);
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 🎭 Animation au chargement */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 🟢 Effet de focus actif */
+        .form-label {
+            font-weight: bold;
+            color: #333;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .form-control:focus + .form-label {
+            color: #007bff;
+        }
+
+        /* 🛠️ Sections en "carte" */
+        .mb-3 {
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .mb-3:hover {
+            transform: scale(1.02);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+
+
+
+    .form-check {
+        background: rgba(0, 0, 0, 0.03);
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        transition: transform 0.3s ease-in-out, background 0.3s ease-in-out;
+    }
+
+    .form-check:hover {
+        background: rgba(0, 0, 0, 0.07);
+        transform: scale(1.02);
+    }
+
+    .form-check-input {
+        transform: scale(1.3);
+        margin-right: 10px;
+    }
+
+    .form-check-input:checked {
+        background-color: #007bff;
+        border-color: #007bff;
+        box-shadow: 0px 0px 6px rgba(0, 123, 255, 0.4);
+    }
+    </style>
+</head>
+<body class="mt-5 mb-5">
+    <div class="container">
+        <h2>Diagnostic Médical</h2>
+        
+        <form method="post">
+            {% csrf_token %}
+
+            <!-- Partie du corps -->
+            <div class="mb-3">
+                <label for="id_body_part" class="form-label">Partie du corps affectée</label>
+                <select name="body_part" class="form-control" id="id_body_part" onchange="this.form.submit()">
+                    <option value="">Sélectionnez...</option>
+                    {% for value, label in form.body_part.field.choices %}
+                        <option value="{{ value }}" {% if value == selected_body_part %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+          <!-- Symptômes -->
+            <div class="mb-3">
+                <label class="form-label">Symptômes</label>
+                <div class="symptom-list">
+                    {% for value, label in form.symptom.field.choices %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="symptom" value="{{ value }}" id="symptom_{{ value }}">
+                            <label class="form-check-label" for="symptom_{{ value }}">{{ label }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- 🔹 AFFICHAGE DES AUTRES CHAMPS -->
+            <div class="mb-3">
+                {{ form.age.label_tag }} {{ form.age }}
+            </div>
+            <div class="mb-3">
+                {{ form.gender.label_tag }} {{ form.gender }}
+            </div>
+            <div class="mb-3">
+                {{ form.chronic_diseases.label_tag }} {{ form.chronic_diseases }}
+            </div>
+            <div class="mb-3">
+                {{ form.medications.label_tag }} {{ form.medications }}
+            </div>
+            <div class="mb-3">
+                {{ form.lifestyle.label_tag }} {{ form.lifestyle }}
+            </div>
+            <div class="mb-3">
+                {{ form.smoking.label_tag }} {{ form.smoking }}
+            </div>
+            <div class="mb-3">
+                {{ form.alcohol.label_tag }} {{ form.alcohol }}
+            </div>
+            <div class="mb-3">
+                {{ form.allergies.label_tag }} {{ form.allergies }}
+            </div>
+            <div class="mb-3">
+                {{ form.family_history.label_tag }} {{ form.family_history }}
+            </div>
+            <div class="mb-3">
+                {{ form.geographic_zone.label_tag }} {{ form.geographic_zone }}
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Soumettre</button>
+        </form>
+    </div>
+
+    <script>
+        // Effet interactif sur la sélection des options
+        $('select').on('change', function () {
+            $(this).css('background', 'white');
+            $(this).css('border-color', '#007bff');
+            $(this).css('box-shadow', '0px 0px 10px rgba(0, 123, 255, 0.3)');
+        });
+    </script>
+</body>
+</html>

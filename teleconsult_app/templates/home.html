@@ -1,0 +1,306 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HOME</title>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  </head>
+  <body>
+    <!-- en tete de page -->
+    <header>
+      <div class="bg-body-tertiary navbar pt-3 pb-3">
+        <div>
+          <a class="navbar-brand" href="#"><img src="{% static 'images/1.png' %}" alt="Logo" width="70" height="55"/></a>
+        </div>
+        <div>
+          <ul class="nav">
+            <div class="btn-group dropdown">
+              <button type="button" class="btn text-danger dropdown-toggle fw-bold" data-bs-toggle="dropdown" aria-expanded="false">Consulter</button>
+              <ul class="dropdown-menu">
+                <a href="{% url 'generaliste' %}" class="dropdown-item fw-bold text-align-center text-danger">Généralistes</a>
+                <a href="{% url 'specialiste' %}" class="dropdown-item fw-bold text-align-center text-danger">Spécialistes</a>
+              </ul>
+            </div>
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'exams' %}">Examens</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'pharmacie' %}">Pharmacie</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'historique' %}">Historiques</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'setting' %}">Paramètres</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'about' %}">A propos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'contact' %}">contact us</a>
+            </li>
+          </ul>
+        </div>
+        {% if not user.is_authenticated %}
+          <div class="btn-group dropdown">
+            <button type="button" class="btn btn-danger dropdown-toggle fw-bold rounded-pill" data-bs-toggle="dropdown" aria-expanded="false">Compte</button>
+            <ul class="dropdown-menu">
+              <a href="{% url 'login' %}" class="dropdown-item fw-bold text-align-center text-danger">Sign in</a>
+              <a href="{% url 'register' %}" class="dropdown-item fw-bold text-align-center text-danger">register</a>
+            </ul>
+          </div>
+        {% else %}
+          <div class="btn-group dropdown ms-3">
+            <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class='bx bx-user-circle' style='color:rgba(15,36,215,0.94); font-size: 40px;'></i></button>
+            <ul class="dropdown-menu">
+              <a href="{% url 'profil' %}" class="dropdown-item fw-bold text-align-center text-primary">Profil</a>
+              <a href="{% url 'logoutuser' %}" class="dropdown-item fw-bold text-align-center text-primary">Deconnexion</a>
+            </ul>
+          </div>
+        {% endif %}
+        <div class="user">
+          <a href="{% url 'register_doctor' %}" class="rounded-pill me-3">Etre Praticien</a>
+        </div>
+      </div>
+    </header>
+    <!-- Section 1 pour le message de bienvenue -->
+    <section>
+      <div id="carouselExampleSlidesOnly" class="carousel slide carousel-size" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item item1 active">
+            <img src="{% static 'images/freepik-export-202409101136403MSc.jpeg' %}" class="d-block w-100" alt="..." />
+            <h2>BIENVENUE SUR<br/>VOTRE CLINIQUE<br/>VIRTUELLE</h2>
+            <a href="{% url 'register' %}">S'inscrire</a>
+          </div>
+          <div class="carousel-item item2">
+            <img src="{% static 'images/freepik-export-20240910102757RRIK.jpeg' %}" class="d-block w-100" alt="..." />
+            <h2>ACCEDEZ<br/>A L'INTEGRALITE DE<br/>VOTRE DOSSIER<br/>MEDICAL</h2>
+            <a href="{% url 'historique' %}">Mon dossier medical</a>
+          </div>
+          <div class="carousel-item item3">
+            <img src="{% static 'images/freepik-export-20240910104540QZEX.jpeg' %}" class="d-block w-100" alt="..." />
+            <h2>CONSULTEZ<br/>EN TOUTE CONFIANCE<br/>UN MEDECIN EN LIGNE<br/>AUJOURD'HUI</h2>
+            <a href="{% url 'specialiste' %}">Consulter maintenant</a>
+          </div>
+          <div class="carousel-item item4">
+            <img src="{% static 'images/freepik-export-20240911202352k0mH.jpeg' %}" class="d-block w-100" alt="..." />
+            <h2>EFFECTUEZ<br/>DES EXAMENS MEDICAUX<br/>DE QUALITE ET FIABLE</h2>
+            <a href="{% url 'exams' %}">Examen medical</a>
+          </div>
+          <div class="carousel-item item5">
+            <img src="{% static 'images/Browsing.jpeg' %}" class="d-block w-100" alt="..." />
+            <h2>VOTRE DIAGNOSTIC<br/>MEDICAL BASE<br/>SUR L'IA</h2>
+            <a href="{% url 'diagnostic' %}">Diagnostic</a>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- section 2 pour le generique -->
+    <section class="section2">
+      <div class="title">
+        <h3>Votre compagnon de sante au quotidien</h3>
+      </div>
+      <div class="card-group">
+        {% for tip in daily_health_tips %}
+          <div class="card grid-sect2 border-0">
+            <img src="{% static tip.image %}" class="card-img-top" alt="{{ tip.title }}" />
+            <div class="card-body">
+              <h5 class="card-title">{{ tip.title }}</h5>
+              <p class="card-text">{{ tip.description }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <!-- section 3 pour les services -->
+    <section class="section3 pt-5">
+      <div class="text-center text-dark">
+        <h2 class="fw-bold">Nos services</h2>
+        <p class="fs-5">
+          Nous vous proposons des services repondant à votre demande et favorisons<br />un meilleur traitement de notre patientele
+        </p>
+      </div>
+
+      <div class="row row-cols-md-2 g-2 pb-5">
+        {% for service in services %}
+          <a href="{% url service.url %}" class="text-decoration-none">
+            <div class="col">
+              <div class="card text-center grid-sect3">
+                <img src="{% static service.image %}" class="card-img-top" alt="{{ service.title }}" />
+                <div class="card-body">
+                  <h5 class="card-title fw-bold text-dark pb-1">{{ service.title }}</h5>
+                  <p class="card-text text-dark">{{ service.description }}</p>
+                </div>
+              </div>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    </section>
+
+    <!-- section4 pour les engagements -->
+    <section class="pb-5 pt-5">
+      <div class="text-dark text-center pt-3">
+        <h2 class="fw-bold">Nos engagements</h2>
+        <p>
+          Chez MEDICARE, nous pensons que les données personnelles et les données de santé méritent une attention particulière.<br /> En tant qu'entreprise fournissant des services numériques aux soignants et aux patients, nous nous engageons<br />à protéger les données et la vie privée de nos utilisateurs.
+        </p>
+      </div>
+      <!-- Grid des engagements -->
+      <div class="container">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+          {% for engagement in engagements %}
+            <div class="col">
+              <div class="card border-0 bg-transparent h-100">
+                <div class="row g-2 justify-content-center pt-3">
+                  <div class="col-md-1 pt-3">
+                    <img src="{% static engagement.image %}" class="img-fluid rounded-start" alt="{{ engagement.title }}" />
+                  </div>
+                  <div class="col-md-10">
+                    <div class="card-body">
+                      <h5 class="card-title fw-bold text-primary">{{ engagement.title }}</h5>
+                      <p class="card-text">{{ engagement.description }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <section class="section5">
+      <div class="text-center">
+        <h2 class="fw-bold">Nos Spécialités médicales</h2>
+        <p class="pb-4">
+          Une spécialité médicale est une branche de la pratique médicale qui se concentre<br />
+          sur un groupe défini de patients, de maladies, de compétences ou de philosophie.
+        </p>
+      </div>
+      <div class="card-group">
+        {% for specialiste in specialistes %}
+          <div class="card bg-transparent">
+            <img src="{% static specialiste.image %}" class="card-img-top" alt="{{ specialiste.name }}" />
+            <div class="card-body">
+              <h5 class="card-title fw-bold">{{ specialiste.name }}</h5>
+              <h6 class="text-white fw-bold">{{ specialiste.specialty }}</h6>
+              <p class="card-text">{{ specialiste.description }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="consult_link">
+        <a href="{% url 'specialiste' %}" class="text-decoration-none">
+          <div class="d-grid col-2 mx-auto pt-5 rounded-pill">
+            <button class="btn btn-primary fw-bold p-2" type="button">Spécialistes</button>
+          </div>
+        </a>
+        <a href="{% url 'generaliste' %}" class="text-decoration-none ms-5">
+          <div class="d-grid col-2 mx-auto pt-5 rounded-pill">
+            <button class="btn btn-primary fw-bold p-2" type="button">Généralistes</button>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section>
+      <footer class="footer">
+        <div class="footer-container">
+          <!-- Section Contact -->
+          <div class="footer-section">
+            <h4>Contact</h4>
+            <p>Adresse: Yaoundé, Cameroun</p>
+            <p>Téléphone: +237 658 332 545</p>
+            <p>
+              Email: <a href="mailto:yvannosonna@gmail.com">yvannosonna@gmail.com</a>
+            </p>
+          </div>
+
+          <!-- Section Liens Utiles -->
+          <div class="footer-section">
+            <h4>Liens Utiles</h4>
+            <ul>
+              <li>
+                <a href="#">Home</a>
+              </li>
+              <li>
+                <a href="#">À propos</a>
+              </li>
+              <li>
+                <a href="#">Services</a>
+              </li>
+              <li>
+                <a href="#">FAQ</a>
+              </li>
+              <li>
+                <a href="#">Blog</a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Section Liens Légaux -->
+          <div class="footer-section">
+            <h4>Liens Légaux</h4>
+            <ul>
+              <li>
+                <a href="#">Conditions Générales d'Utilisation</a>
+              </li>
+              <li>
+                <a href="#">Politique de Confidentialité</a>
+              </li>
+              <li>
+                <a href="#">Mentions Légales</a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Section Assistance -->
+          <div class="footer-section">
+            <h4>Assistance</h4>
+            <ul>
+              <li>
+                <a href="#">Centre d'Aide</a>
+              </li>
+              <li>
+                <a href="#">Contactez-nous</a>
+              </li>
+              <li>
+                <a href="#">Suivi des Demandes</a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Section Réseaux Sociaux -->
+          <div class="footer-section social-media">
+            <h4>Réseaux Sociaux</h4>
+            <a href="#" class="social-icon" aria-label="Facebook"><img src="{% static 'images/facebook.png' %}" alt="Facebook icon" /></a>
+            <a href="#" class="social-icon" aria-label="LinkedIn"><img src="{% static 'images/linkedin.png' %}" alt="LinkedIn icon" /></a>
+            <a href="#" class="social-icon" aria-label="Twitter"><img src="{% static 'images/twitter.png' %}" alt="Twitter icon" /></a>
+          </div>
+
+          <!-- Section Newsletter -->
+          <div class="footer-section newsletter">
+            <h4>Newsletter</h4>
+            <form action="#" method="post">
+              <input type="email" placeholder="Votre email" required aria-label="Adresse email" />
+              <button type="submit">S'inscrire</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Bas de page -->
+        <div class="footer-bottom">
+          <p>&copy; 2024 Téléconsultation. Tous droits réservés.</p>
+        </div>
+      </footer>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  </body>
+</html>

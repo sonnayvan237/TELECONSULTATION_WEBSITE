@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Généraliste</title>
+    <link rel="stylesheet" href="{% static 'css/generaliste.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body class="ms-3 me-3">
+    <div class="container">
+        <h3 class="text-center text-white fw-bold pt-4 pb-4 fs-1">Nos médecins généralistes:</h3>
+        <p class="text-center text-white fw-bold fs-5 libelle mb-5">
+            Nous mettons à votre disposition des médecins généralistes professionnels de santé
+            polyvalent qui assure la prise en charge globale des
+            patients, quel que soit leur âge ou leur pathologie. Il joue un rôle clé dans la prévention, le diagnostic et le
+            suivi des maladies courantes. Accessible et à l'écoute, il accompagne les patients tout au long de leur
+            parcours de santé.
+        </p>
+
+        <div class="card-container">
+            <div class="container mb-5">
+                <div class="row g-4"> <!-- Gestion de l'espacement avec gy et gx -->
+                    {% for medecin in medecins %}
+                        {% if medecin.specialite == "Généraliste" %}
+                            <div class="col-sm-6 col-md-4 col-lg-3 row-cols-1"> <!-- Responsive classes pour taille de colonnes -->
+                                <div class="card h-100">
+                                    <img src="{% static 'images/' %}{{ medecin.photo }}" class="card-img-top" alt="{{ medecin.nom }}">
+                                    <div class="card-body text-center">
+                                        <h2 class="card-title fs-5">{{ medecin.nom }}</h2>
+                                        <h5 class="text-muted">{{ medecin.specialite }}</h5>
+                                        <a href="{% url 'consultation_option_généraliste' medecin.id %}" class="btn btn-primary mt-3">Consulter</a>
+                                    </div>
+                                    <div class="line">.</div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

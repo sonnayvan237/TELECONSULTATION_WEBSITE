@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/rendezvous.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>Patient</title>
+</head>
+<body>
+
+     <!-- Barre de recherche -->
+    <div class="mb-2 mt-5 input-box">
+        <input type="text" id="searchInput" class="form-control searchbar d-grid mx-auto" placeholder="Rechercher par nom ou spécialité">
+        <i class='bx bx-search'></i>
+    </div>
+
+    <!-- Tableau des utilisateurs -->
+    <table class="table mt-5 mb-5" id="cardContainer">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Noms & Prénoms</th>
+                <th scope="col">Email</th>
+                <th scope="col">Age</th>
+                <th scope="col">Téléphone</th>
+                <th scope="col">Rendez-vous</th> <!-- Nouvelle colonne pour afficher les rendez-vous -->
+            </tr>
+        </thead>
+        <tbody id="tbodyContainer">
+            {% for item in patients_rendezvous %}
+                <tr>
+                    <td>{{ item.patient.id }}</td>
+                    <td>{{ item.patient.nom_prenom }}</td>
+                    <td>{{ item.patient.email }}</td>
+                    <td>{{ item.patient.age }}</td>
+                    <td>{{ item.patient.telephone }}</td>
+                    <td>
+                        <!-- Afficher les rendez-vous du patient -->
+                    {% for rdv in item.rendezvous %}
+                        <p>
+                            {{ rdv.jour }} - {{ rdv.heure|time:"H:i" }}
+                            <a href="{% url 'delete_rendezvous_doctor' rdv.id %}" class="text-danger">
+                                <i class="bx bx-trash icon"></i>
+                            </a>
+                        </p>
+                    {% empty %}
+                        <p>Aucun rendez-vous</p>
+                    {% endfor %}
+                    
+                    </td>
+                    
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

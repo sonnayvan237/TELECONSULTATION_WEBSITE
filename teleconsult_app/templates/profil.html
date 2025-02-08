@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/profil.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <title>Profil Utilisateur</title>
+</head>
+<body>
+
+<div class="container">
+    <div class="text-center">
+        <div class="text-center">
+            <div class="profile-container">
+                <form method="POST" enctype="multipart/form-data" action="{% url 'update_profile_picture' %}">
+                    {% csrf_token %}
+                    <!-- Image de profil avec icône de caméra -->
+                    <div class="profile-picture-wrapper">
+                        <img id="profileImage" src="{% if user.profile.profile_picture %}{{ user.profile.profile_picture.url }}{% else %}{% static 'images/default-profile.png' %}{% endif %}" alt="Photo de profil" />
+                        <label for="profileImageInput" class="camera-icon">
+                            <i class='bx bx-camera'></i>
+                        </label>
+                        <input type="file" id="profileImageInput" name="profile_picture" accept="image/*" onchange="previewImage(event)" style="display: none;">
+                    </div>
+                    <!-- Bouton de soumission -->
+                    <button type="submit" class="save-button">Enregistrer</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="user-info mt-5 mb-5">
+            <h2 class="fw-bold text-primary mt-3">Nom d'Utilisateur : <span class="text-dark">{{ patient.nom_prenom }}</span></h2>
+            <h2 class="fw-bold text-primary mt-3">Âge : <span class="text-dark">{{ patient.age }} ans</span></h2>
+            <h2 class="fw-bold text-primary mt-3">Email : <span class="text-dark">{{ patient.email }}</span></h2>
+            <h2 class="fw-bold text-primary mt-3">Téléphone : <span class="text-dark">{{ patient.telephone }}</span></h2>
+        </div>
+
+        <div class="settings mt-5 mb-5">
+            <h3>Paramètres de Compte</h3>
+            <div class="user_option">
+                <button class="p-3">Modifier Profil</button>
+                <button class="p-3">Changer Mot de Passe</button>
+                <button class="p-3"><a href="{% url 'logoutuser' %}" class="deconnexion">Déconnexion</a></button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function previewImage(event) {
+        const imagePreview = document.getElementById('profileImage');
+        imagePreview.src = URL.createObjectURL(event.target.files[0]);
+        imagePreview.onload = function () {
+            URL.revokeObjectURL(imagePreview.src); // Libère la mémoire une fois l'image chargée
+        };
+    }    
+</script>
+</body>
+</html>

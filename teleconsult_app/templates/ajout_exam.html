@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajout du personnel</title>
+    <link rel="stylesheet" href="{% static 'css/ajout_exam.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    
+    <h2 class="text-center mb-5 mt-5 fw-bold">  
+    {% if exam %}
+        Modification des examens :
+    {%else%}
+        Ajout des examens :
+    {% endif %}
+    </h2>
+    <!-- Formulaire pour ajouter un nouvel utilisateur -->
+    <form action="{% if exam %}{% url 'update_exam' exam.id %}{% else %}{% url 'add_exam' %}{% endif %}" method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <input type="text" id="nomInput" placeholder="Nom de l'examen" class="form-control" name="nom" value="{{exam.nom}}">
+            <input type="text" id="prixInput" placeholder="prix" class="form-control mt-4" name="prix" value="{{exam.prix}}">
+            <input class="form-control mt-4" id="formFileLg" type="file" name="photo" placeholder="Photo de profil" value="{{exam.photo}}" >
+            <button class="btn btn-primary mt-4 d-grid mx-auto fw-bold" type="submit">
+            {% if medecin %}
+                modifier 
+            {%else%}
+                Ajouter
+            {% endif %}
+            </button>
+        </div>
+    </form>
+   
+    <!-- Barre de recherche -->
+    <div class="mb-2 mt-5 input-box">
+        <input type="text" id="searchInput" class="form-control searchbar d-grid mx-auto" placeholder="Rechercher par nom ou spécialité">
+        <i class='bx bx-search'></i>
+    </div>
+
+    <!-- Tableau des utilisateurs -->
+    <table class="table mt-5 mb-5" id="cardContainer">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Noms de l'examen</th>
+                <th scope="col">prix</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody id="tbodyContainer">
+            {% for exam in exams %}
+                <tr>
+                    <td>{{ exam.id }}</td> <!-- Compteur pour l'ID -->
+                    <td>{{ exam.nom }}</td>
+                    <td>{{ exam.prix }}</td>
+                    <td>
+                        <span><a href="{% url 'update_exam' exam.id %}"><i class="bx bx-pencil icon me-2"></i></a></span>
+                        <span><a href="{% url 'delete_exam' exam.id %}" class="text-danger"><i class="bx bx-trash icon"></i></a></span>
+                    </td>
+                    
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

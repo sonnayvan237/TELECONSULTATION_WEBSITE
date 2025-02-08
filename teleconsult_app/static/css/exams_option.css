@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Roboto:wght@100;300;400;500&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "poppins", sans-serif;
+}
+
+body{
+    margin-left: 10% ;
+    margin-right: 10% ;
+    background-image: url(./../images/pexels-karolina-grabowska-4386464.jpg);
+    background-size: cover; /* Couvre toute la page */
+    background-attachment: fixed; /* Fixe l'image lors du défilement */ 
+}
+.title{
+    margin-left: 35%;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.price1{
+    position: absolute;
+    margin-left: 33%;
+}
+.price2{
+    position: absolute;
+    margin-left: 61%;
+    margin-top: -8%;
+}
+
+.info{
+    
+    padding-bottom: 20px;
+    margin-left: 15%;
+    margin-right: 15%;
+    text-align: center;
+    font-size: 20px;
+}
+
+.rounded-pill{
+    border: 1px solid blue;
+    padding: 10px;
+    background-color: blue;
+}
+img{
+    margin-left: 40%;
+    width: 300px !important;
+    height: 180px;
+}
+.detail{
+    margin-left: 10%;
+    padding-top: 30px;
+    display: flex;
+    flex-direction: row; 
+}
+.paiement{
+    margin-left: 45%;
+    text-decoration: none;
+    font-weight: bold;
+    color: white;
+}
+.form-switch{
+    margin-left: 10%;
+}
+.examname{
+    margin-left: 9%; 
+}
+.dec{
+    background-color: blue;
+    width: 100%;
+    padding: 1px;
+    
+}

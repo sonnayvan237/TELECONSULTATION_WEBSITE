@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/consultation_option.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <title>Consultation</title>
+</head>
+
+<body>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-15 d-flex">
+            <img src="{% static 'images/' %}{{ medecin.photo }}" alt="Avatar du médecin" class="rounded-circle images">
+            <div class="profil">
+                <h1 class="fw-bold">{{ medecin.nom }}</h1>
+                <p>Âge: {{ medecin.age }}</p>
+                <p>Spécialité: {{ medecin.specialite }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="consulter">
+    <h2 class="pb-4 pt-5 text-center text-dark fw-bold">Faites-vous consulter par notre spécialiste :</h2>
+    <div class="text-center mt-4">
+        <a href="{% url 'enregistrer_consultation' medecin_id=medecin.id consultation_type='video' %}" class="me-5 p-2 rounded">Appel vidéo</a>
+        <a href="{% url 'enregistrer_consultation' medecin_id=medecin.id consultation_type='audio' %}" class="ms-5 p-2 rounded">Appel audio</a>
+    </div>
+</div>
+
+<div class="prise_rendezvous pt-5">
+    <h2 class="pb-4 text-dark fw-bold">Calendrier des Rendez-vous :</h2>
+    {% if messages %}
+        {% for message in messages %}
+                <div class="alert alert-danger">{{ message }}</div>
+        {% endfor %}
+    {% endif %} 
+    
+    <!-- Calendrier -->
+    <table id="calendar">
+        <thead>
+            <tr>
+                <th>Heure</th>
+                {% for jour in jours %}
+                    <th>{{ jour|title }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for heure in heures %}
+                <tr>
+                    <td>{{ heure }}</td>
+                    {% for jour in jours %}
+                        <td>
+                            {% with key=jour|add:"-"|add:heure %}
+                                {% if key in appointments %}
+                                    <a href="{% url 'delete_rendezvous' medecin.id %}" class="booked p-2">Réservé</a>
+                                {% else %}
+                                    Libre
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Formulaire de Réservation -->
+    <h2 class="pb-4 pt-4 text-dark fw-bold">Réserver un Rendez-vous</h2>
+    <form method="post" class="pb-5">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="text-center fw-bold p-2">Réserver</button>
+    </form>
+</div>
+
+</body>
+
+</html>

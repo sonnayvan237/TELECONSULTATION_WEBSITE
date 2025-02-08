@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examens et ordonnances</title>
+    <link rel="stylesheet" href="{% static 'css/exams_pages.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+    <h3 class="text-center text-white fw-bold pt-4 pb-4 fs-1">Nos Examens: </h3>
+    <p class="text-center text-white fw-bold fs-5 libelle mb-5">
+        Dans le cadre de la prise en charge globale des patients, notre hôpital propose une large gamme d'examens médicaux
+        adaptés à chaque besoin. Ces examens, allant des analyses sanguines aux imageries avancées, permettent de diagnostiquer
+        et suivre efficacement diverses pathologies.
+    </p>
+    <section class="pb-4">
+        <div  id="cardContainer">
+    
+            <div class="container">
+                <div class="row cols-lg-4 g-4"> <!-- Utiliser g-4 pour espacer les cartes -->
+                    <div id="1"  class="card ms-2 me-5" style="width: 20rem;">
+                        <a href="{% url 'soumission_ordonnance' %}" class="ordonnance">
+                            <img src="{% static 'images/ordonnance.png'%}" class="card-img-top" alt="..." >
+                            <p class="fw-bold text-center text-primary fs-3 ">Envoyez votre ordonnance</p>
+                        </a>
+                    </div>
+                    {% for exam in exams %}
+                        <div class="col"> <!-- Chaque carte prendra une colonne -->
+                            <div class="card">
+                                <img src="{% static 'images/' %}{{ exam.photo }}" class="card-img-top" alt="{{ exam.nom }}">
+                                <div class="card-body">
+                                    <h4 class="card-title">{{ exam.nom }}</h4>
+                                    <a href="{% url 'exams_option' exam.id %}" class="btn btn-primary btn-payer">Payer</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div> 
+        </div>
+    </section>
+</body>
+</html>

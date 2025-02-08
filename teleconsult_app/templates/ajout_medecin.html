@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajout du personnel</title>
+    <link rel="stylesheet" href="{% static 'css/ajout_medecin.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    
+    <h2 class="text-center mb-5 mt-5 fw-bold">  
+    {% if medecin %}
+        Modification Du Personnel :
+    {%else%}
+        Ajout Du Personnel :
+    {% endif %}
+    </h2>
+    <!-- Formulaire pour ajouter un nouvel utilisateur -->
+    <form action="{% if medecin %}{% url 'update_medecin' medecin.id %}{% else %}{% url 'add_medecin' %}{% endif %}" method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <input type="text" id="nomInput" placeholder="Nom et prénom" class="form-control" name="nom" value="{{medecin.nom}}">
+            <input type="text" id="specialiteInput" placeholder="Spécialité" class="form-control mt-4" name="specialite" value="{{medecin.specialite}}">
+            <input type="text" id="emailInput" placeholder="Email" class="form-control mt-4" name="email" value="{{medecin.email}}">
+            <input type="text" id="ageInput" placeholder="Age" class="form-control mt-4" name="age" value="{{medecin.age}}">
+            <input class="form-control mt-4" id="formFileLg" type="file" name="photo" placeholder="Photo de profil" value="{{medecin.photo}}" >
+            <button class="btn btn-primary mt-4 d-grid mx-auto fw-bold" type="submit">
+            {% if medecin %}
+                modifier 
+            {%else%}
+                Ajouter
+            {% endif %}
+            </button>
+        </div>
+    </form>
+   
+    <!-- Barre de recherche -->
+    <div class="mb-2 mt-5 input-box">
+        <input type="text" id="searchInput" class="form-control searchbar d-grid mx-auto" placeholder="Rechercher par nom ou spécialité">
+        <i class='bx bx-search'></i>
+    </div>
+
+    <!-- Tableau des utilisateurs -->
+    <table class="table mt-5 mb-5" id="cardContainer">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Noms & Prénoms</th>
+                <th scope="col">Spécialité</th>
+                <th scope="col">Email</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody id="tbodyContainer">
+            {% for medecin in medecins %}
+                <tr>
+                    <td>{{ medecin.id }}</td> <!-- Compteur pour l'ID -->
+                    <td>{{ medecin.nom }}</td>
+                    <td>{{ medecin.specialite }}</td>
+                    <td>{{ medecin.email }}</td>
+                    <td>
+                        <span><a href="{% url 'update_medecin' medecin.id %}"><i class="bx bx-pencil icon me-2"></i></a></span>
+                        <span><a href="{% url 'delete_medecin' medecin.id %}" class="text-danger"><i class="bx bx-trash icon"></i></a></span>
+                        <span>
+                            <a href="{% url 'activate_medecin' medecin.id %}" class="{% if medecin.is_active %}text-success{% else %}text-warning{% endif %}">
+                                <i class="bx {% if medecin.is_active %}bxs-check-circle{% else %}bx-minus-circle{% endif %} icon"></i>
+                            </a>
+                        </span>
+                    </td>
+                    
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

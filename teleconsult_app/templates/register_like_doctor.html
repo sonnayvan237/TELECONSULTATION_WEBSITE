@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REGISTER</title>
+    <link rel="stylesheet" href="{% static 'css/register_doctor.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <form action="{% url 'register_doctor' %}" method="POST">
+        {% csrf_token %}
+        <div class="register-container" id="register">
+            <div class="title">
+                <h1>Sign Up</h1>
+            </div>
+           
+            <div class="input-box">
+                <input type="text" name="firstname" class="input-field" placeholder="Nom et prenom" required>
+                <i class='bx bxs-user'></i>
+            </div>
+
+            
+            <div class="input-box">
+                <input type="text" name="username" class="input-field" placeholder="Nom d'utilisateur" required>
+                <i class='bx bxs-user'></i>
+            </div>
+
+            <div class="input-box">
+                <input type="text" name="specialite" class="input-field" placeholder="Spécialité" required>
+                <i class='bx bx-briefcase' style='color:#fbf5f5'></i>
+            </div>
+
+            <div class="input-box">
+                <input type="text" name="age" class="input-field" placeholder="Age" required>
+                <i class='bx bxs-user-detail'></i>
+            </div>
+
+            <div class="input-box">
+                <input type="email" name="email" class="input-field" placeholder="Email" required>
+                <i class='bx bx-envelope'></i>
+            </div>
+
+            <div class="input-box">
+                <input type="password" name="password" class="input-field" placeholder="Mot de passe" required>
+                <i class='bx bx-lock-alt'></i>
+            </div>
+
+            <div  class="remember_me">
+                <input type="checkbox" id="register-check">
+                <label for="register-check">Remember Me</label>
+            </div>
+            
+            <div class="input-box">
+                <button type="submit" class="btn">Register</button>
+            </div>
+            <div class="two">
+                <label><p>Have an account?<a href="{% url 'login' %}">Login</a></p></label>
+            </div>
+        </div>
+    </form>
+</body>
+</html>

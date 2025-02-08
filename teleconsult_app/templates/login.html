@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login page</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <form action="{% url 'login' %}" method="POST">
+        {% csrf_token %}
+        <div class="form-box">
+            <div class="wrapper">
+                <h1>Login</h1> <br> 
+                <div class="input-box">
+                    <input type="text" id="FirstnameInput" class="input-field" placeholder="username" name="username" required>
+                    <i class='bx bxs-user'></i>
+                </div>
+                <div class="input-box">
+                    <input type="password" class="input-field" placeholder="password" name="password" required>
+                    <i class='bx bxs-lock-alt' ></i>
+                </div>
+
+                <div class="remember-forget">
+                    <label><input type="checkbox"> Remember me</label>
+                    <a href="#">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn">Login</button>
+                <div class="register-link">
+                    <p>Don't have an account?<a href="{% url 'register' %}">Register</a></p>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>

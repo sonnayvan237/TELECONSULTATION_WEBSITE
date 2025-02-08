@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tableau de Bord Médecin</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/home_doctor.css' %}" />
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Sidebar -->
+      <nav class="sidebar">
+        <div class="sidebar-header">
+            <a href="exams"><img src="{% static 'images/1.png' %}" alt="Logo" width="70" height="55" /></a>
+            <h4>Tableau de Bord</h4>
+        </div>
+        <ul  class="nav flex-column">
+            <!-- Patients Section -->
+            <li class="nav-item">
+                <a href="{% url 'medecin_consultations' %}" class="nav-link"><i class="bx bx-user"></i> Mes consultations</a>
+            </li>
+
+             <!-- Rendez-vous Section -->
+            <li class="nav-item">
+              <a href="{% url 'rendezvous' %}" class="nav-link"><i class="bx bx-calendar"></i> Rendez-vous</a>
+            </li>
+            
+            <!-- Dossier Médical Section -->
+            <li class="nav-item">
+                <a href="{% url 'exams' %}" class="nav-link"><i class="bx bx-folder-open"></i> Dossier Médical</a>
+            </li>
+    
+            <!-- Prescriptions Médicales Section -->
+            <li class="nav-item">
+                <a href="{% url 'exams' %}" class="nav-link"><i class="bx bx-receipt"></i> Prescriptions Médicales</a>
+            </li>
+    
+            <!-- Messagerie et Communication Section -->
+            <li class="nav-item">
+                <a href="{% url 'exams' %}" class="nav-link"><i class="bx bx-envelope"></i> Messagerie</a>
+            </li>
+  
+            <!-- Logout/Login Section -->
+          {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a href="{% url 'logoutuser' %}" class="nav-link"><i class="bx bx-log-out"></i> Déconnexion</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a href="{% url 'login' %}" class="nav-link"><i class="bx bx-log-in"></i> Connexion</a>
+            </li>
+          {% endif %}
+        </ul>
+    </nav>
+    
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <header class="main-header text-center">
+          <h1 class="fw-bold">Bienvenue, Dr. {{ user.username }}</h1>
+        </header>
+
+        <!-- Dashboard Cards -->
+        <section class="dashboard-cards row-2">
+          <div class="card">
+            <h3>Examens</h3>
+            <p>Dans cette rubrique vous en tant que praticien vous pouvez egalement passer un examen en fonction d'une prescription</p>
+            <a href="{% url 'exams' %}" class="btn btn-primary">Voir</a>
+          </div>
+
+          <div class="card">
+            <h3>Pharmacie</h3>
+            <p>Nous vous autorisons à jeter un coup d'oeil dans notre pharmacie pour vos differents achats</p>
+            <a href="{% url 'pharmacie' %}" class="btn btn-primary">Voir</a>
+          </div>
+
+          <div class="card">
+            <h3>Consulter</h3>
+            <p>Vous en tant que praticien il vous ait possible de consulter notre liste de praticien et de se faire consulter si besoin</p>
+            <div class="d-flex justify-content-around">
+              <a href="{% url 'generaliste' %}" class="btn btn-primary">Généraliste</a>
+              <a href="{% url 'specialiste' %}" class="btn btn-primary">Spécialiste</a>
+            </div>
+          </div>
+
+
+          <div class="card">
+            <h3>Paramètres</h3>
+            <p>Acceder aux differents Paramètress liés à votre compte et efectuer les changements desirés</p>
+            <a href="{% url 'setting' %}" class="btn btn-primary">Voir</a>
+          </div>
+
+          <div class="card">
+            <h3>Contact</h3>
+            <p>Contact nous en cas de préocupation ou pour d'eventuelle suggestion visant à améliorer l'experience des utilisateurs</p>
+            <a href="{% url 'contact' %}" class="btn btn-primary">Voir</a>
+          </div>
+
+          <div class="card">
+            <h3>Contact</h3>
+            <p>Contactez nous en cas de préocupation ou pour d'eventuelle suggestion visant à améliorer l'experience des utilisateurs</p>
+            <a href="{% url 'contact' %}" class="btn btn-primary">Voir</a>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

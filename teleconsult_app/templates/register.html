@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REGISTER</title>
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+{% if messages %}
+    {% for message in messages %}
+        <p class="{{ message.tags }}">{{ message }}</p>
+    {% endfor %}
+{% endif %}
+<body>
+    <form action="{% url 'register' %}" method="POST">
+        {% csrf_token %}
+        <div class="form-box">
+            <div class="register-container" id="register">
+                <div class="top">
+                    <h1>Sign Up</h1> <br>
+                </div>
+                <div class="input-box">
+                    <input type="text" id="FirstnameInput" class="input-field" placeholder="Nom et prenom" name="nom_prenom" required>
+                    <i class='bx bxs-user'></i>
+                </div>
+                <div class="input-box">
+                    <input type="text" class="input-field" placeholder="Username" name="username" required>
+                    <i class='bx bxs-user'></i>
+                </div>
+                <div class="input-box">
+                    <input type="number" class="input-field" placeholder="Age" name="age" required>
+                    <i class='bx bxs-user-detail'></i>
+                </div>
+                <div class="input-box">
+                    <input type="text" class="input-field" placeholder="Téléphone" name="telephone" required>
+                    <i class='bx bxs-phone'></i>
+                </div>
+                <div class="input-box">
+                    <input type="email" class="input-field" placeholder="Email" name="email" required>
+                    <i class='bx bx-envelope'></i>
+                </div>
+                <div class="input-box">
+                    <input type="password" class="input-field" placeholder="Password" name="password" required>
+                    <i class='bx bx-lock-alt'></i>
+                </div>
+                <div class="two-cols">
+                    <div class="one">
+                        <input type="checkbox" id="register-check">
+                        <label for="register-check">Remember Me</label>
+                    </div>
+                </div>
+                <div class="input-box">
+                    <button type="submit" class="btn">Register</button>
+                </div>
+                <div class="two">
+                    <label><p>Have an account? <a href="{% url 'login' %}">Login</a></p></label>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>

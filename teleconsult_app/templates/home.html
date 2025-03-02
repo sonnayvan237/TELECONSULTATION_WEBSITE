@@ -69,33 +69,38 @@
     </header>
     <!-- Section 1 pour le message de bienvenue -->
     <section>
-      <div id="carouselExampleSlidesOnly" class="carousel slide carousel-size" data-bs-ride="carousel">
+      <div id="carouselExampleSlidesOnly" class="carousel slide carousel-size" data-bs-ride="carousel" data-bs-interval="5000">
         <div class="carousel-inner">
-          <div class="carousel-item item1 active">
-            <img src="{% static 'images/freepik-export-202409101136403MSc.jpeg' %}" class="d-block w-100" alt="..." />
-            <h2>BIENVENUE SUR<br/>VOTRE CLINIQUE<br/>VIRTUELLE</h2>
-            <a href="{% url 'register' %}">S'inscrire</a>
-          </div>
-          <div class="carousel-item item2">
-            <img src="{% static 'images/freepik-export-20240910102757RRIK.jpeg' %}" class="d-block w-100" alt="..." />
-            <h2>ACCEDEZ<br/>A L'INTEGRALITE DE<br/>VOTRE DOSSIER<br/>MEDICAL</h2>
-            <a href="{% url 'historique' %}">Mon dossier medical</a>
-          </div>
-          <div class="carousel-item item3">
-            <img src="{% static 'images/freepik-export-20240910104540QZEX.jpeg' %}" class="d-block w-100" alt="..." />
-            <h2>CONSULTEZ<br/>EN TOUTE CONFIANCE<br/>UN MEDECIN EN LIGNE<br/>AUJOURD'HUI</h2>
-            <a href="{% url 'specialiste' %}">Consulter maintenant</a>
-          </div>
-          <div class="carousel-item item4">
-            <img src="{% static 'images/freepik-export-20240911202352k0mH.jpeg' %}" class="d-block w-100" alt="..." />
-            <h2>EFFECTUEZ<br/>DES EXAMENS MEDICAUX<br/>DE QUALITE ET FIABLE</h2>
-            <a href="{% url 'exams' %}">Examen medical</a>
-          </div>
-          <div class="carousel-item item5">
-            <img src="{% static 'images/Browsing.jpeg' %}" class="d-block w-100" alt="..." />
-            <h2>VOTRE DIAGNOSTIC<br/>MEDICAL BASE<br/>SUR L'IA</h2>
-            <a href="{% url 'diagnostic' %}">Diagnostic</a>
-          </div>
+          {% if not user.is_authenticated %}
+            <div class="carousel-item item1 active">
+              <img src="{% static 'images/freepik-export-202409101136403MSc.jpeg' %}" class="d-block w-100" alt="..." />
+              <h2>BIENVENUE SUR<br/>VOTRE CLINIQUE<br/>VIRTUELLE</h2>
+              <a href="{% url 'register' %}">S'inscrire</a>
+            </div>
+          {% else %}
+            <div  class="carousel slide carousel-size" data-bs-interval="5000">
+              <div class="carousel-item item3 active">
+                <img src="{% static 'images/freepik-export-20240910104540QZEX.jpeg' %}" class="d-block w-100" alt="..." />
+                <h2>CONSULTEZ<br/>EN TOUTE CONFIANCE<br/>UN MEDECIN EN LIGNE<br/>AUJOURD'HUI</h2>
+                <a href="{% url 'specialiste' %}">Consulter maintenant</a>
+              </div>
+              <div class="carousel-item item5">
+                <img src="{% static 'images/Browsing.jpeg' %}" class="d-block w-100" alt="..." />
+                <h2>VOTRE DIAGNOSTIC<br/>MEDICAL BASE<br/>SUR L'IA</h2>
+                <a href="{% url 'diagnostic' %}">Diagnostic</a>
+              </div>
+              <div class="carousel-item item2">
+                <img src="{% static 'images/freepik-export-20240910102757RRIK.jpeg' %}" class="d-block w-100" alt="..." />
+                <h2>ACCEDEZ<br/>A L'INTEGRALITE DE<br/>VOTRE DOSSIER<br/>MEDICAL</h2>
+                <a href="{% url 'historique' %}">Mon dossier medical</a>
+              </div>
+              <div class="carousel-item item4">
+                <img src="{% static 'images/freepik-export-20240911202352k0mH.jpeg' %}" class="d-block w-100" alt="..." />
+                <h2>EFFECTUEZ<br/>DES EXAMENS MEDICAUX<br/>DE QUALITE ET FIABLE</h2>
+                <a href="{% url 'exams' %}">Examen medical</a>
+              </div>
+            </div>
+          {% endif %}
         </div>
       </div>
     </section>

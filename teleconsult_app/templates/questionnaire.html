@@ -1,144 +1,13 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Diagnostic Médical</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/questionnaire.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    
-    <style>
-        /* 🌈 Style général */
-        body {
-            background: linear-gradient(120deg, #a1c4fd, #fbc2eb); /* Dégradé dynamique */
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Arial', sans-serif;
-            animation: backgroundFade 5s infinite alternate;
-        }
-
-        @keyframes backgroundFade {
-            from { background-position: left; }
-            to { background-position: right; }
-        }
-
-        .container {
-            max-width: 650px;
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
-            animation: fadeIn 0.8s ease-in-out;
-        }
-
-        h2 {
-            text-align: center;
-            color: #007bff;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        /* 🌟 Style des inputs */
-        select, input, textarea {
-            background: linear-gradient(135deg, #ffffff, #f8f9fa);
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            padding: 12px;
-            font-size: 16px;
-            transition: all 0.3s ease-in-out;
-        }
-
-        select:hover, input:hover, textarea:hover {
-            background: white;
-            border-color: #007bff;
-            transform: scale(1.02);
-        }
-
-        select:focus, input:focus, textarea:focus {
-            background: white;
-            border-color: #007bff;
-            box-shadow: 0px 0px 10px rgba(0, 123, 255, 0.3);
-            transform: scale(1.03);
-        }
-
-        /* 🔘 Bouton stylé */
-        .btn-primary {
-            background: linear-gradient(135deg, #007bff, #6610f2);
-            border: none;
-            padding: 14px;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 10px;
-            transition: all 0.3s ease-in-out;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #6610f2, #007bff);
-            transform: scale(1.05);
-            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
-        }
-
-        /* 🎭 Animation au chargement */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* 🟢 Effet de focus actif */
-        .form-label {
-            font-weight: bold;
-            color: #333;
-            transition: color 0.3s ease-in-out;
-        }
-
-        .form-control:focus + .form-label {
-            color: #007bff;
-        }
-
-        /* 🛠️ Sections en "carte" */
-        .mb-3 {
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.03);
-            border-radius: 8px;
-            margin-bottom: 15px;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .mb-3:hover {
-            transform: scale(1.02);
-            background: rgba(0, 0, 0, 0.05);
-        }
-
-
-
-
-    .form-check {
-        background: rgba(0, 0, 0, 0.03);
-        padding: 10px;
-        border-radius: 8px;
-        margin-bottom: 8px;
-        transition: transform 0.3s ease-in-out, background 0.3s ease-in-out;
-    }
-
-    .form-check:hover {
-        background: rgba(0, 0, 0, 0.07);
-        transform: scale(1.02);
-    }
-
-    .form-check-input {
-        transform: scale(1.3);
-        margin-right: 10px;
-    }
-
-    .form-check-input:checked {
-        background-color: #007bff;
-        border-color: #007bff;
-        box-shadow: 0px 0px 6px rgba(0, 123, 255, 0.4);
-    }
-    </style>
 </head>
 <body class="mt-5 mb-5">
     <div class="container">
@@ -203,6 +72,13 @@
                 {{ form.geographic_zone.label_tag }} {{ form.geographic_zone }}
             </div>
 
+            <!-- Zone d'affichage des symptômes sélectionnés -->
+            <div class="mb-3">
+                <label class="form-label">Symptômes sélectionnés</label>
+                <div id="selected-symptoms" class="p-2 border rounded bg-light"></div>
+            </div>
+
+
             <button type="submit" class="btn btn-primary w-100">Soumettre</button>
         </form>
     </div>
@@ -214,6 +90,52 @@
             $(this).css('border-color', '#007bff');
             $(this).css('box-shadow', '0px 0px 10px rgba(0, 123, 255, 0.3)');
         });
+
+        document.addEventListener("DOMContentLoaded", function () {
+        const selectedSymptomsDiv = document.getElementById("selected-symptoms");
+        const symptomCheckboxes = document.querySelectorAll('input[name="symptom"]');
+        
+        // Fonction pour mettre à jour l'affichage des symptômes sélectionnés
+        function updateSelectedSymptoms() {
+            let selectedSymptoms = JSON.parse(localStorage.getItem("selectedSymptoms")) || [];
+
+            // Efface la div avant de la remplir
+            selectedSymptomsDiv.innerHTML = selectedSymptoms.length 
+                ? selectedSymptoms.join(", ") 
+                : "<em>Aucun symptôme sélectionné</em>";
+        }
+
+        // Charger les symptômes sélectionnés au rechargement de la page
+        updateSelectedSymptoms();
+
+        // Écoute les changements sur les checkboxes de symptômes
+        symptomCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener("change", function () {
+                let selectedSymptoms = JSON.parse(localStorage.getItem("selectedSymptoms")) || [];
+
+                if (this.checked) {
+                    // Ajouter le symptôme si coché
+                    if (!selectedSymptoms.includes(this.value)) {
+                        selectedSymptoms.push(this.value);
+                    }
+                } else {
+                    // Supprimer le symptôme si décoché
+                    selectedSymptoms = selectedSymptoms.filter(symptom => symptom !== this.value);
+                }
+
+                // Sauvegarde dans le localStorage
+                localStorage.setItem("selectedSymptoms", JSON.stringify(selectedSymptoms));
+
+                // Mise à jour de l'affichage
+                updateSelectedSymptoms();
+            });
+        });
+
+        // Nettoyer les symptômes sélectionnés lorsqu'on soumet le formulaire
+        document.querySelector("form").addEventListener("submit", function () {
+            localStorage.removeItem("selectedSymptoms");
+        });
+    });
     </script>
 </body>
 </html>

@@ -8,11 +8,11 @@
     <link rel="stylesheet" href="{% static 'css/register.css' %}">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
-{% if messages %}
+{% comment %} {% if messages %}
     {% for message in messages %}
         <p class="{{ message.tags }}">{{ message }}</p>
     {% endfor %}
-{% endif %}
+{% endif %} {% endcomment %}
 <body>
     <form action="{% url 'register' %}" method="POST">
         {% csrf_token %}

@@ -12,6 +12,11 @@
 <body>
     <form action="{% url 'login' %}" method="POST">
         {% csrf_token %}
+        {% if messages %}
+            {% for message in messages %}
+                <p class="{{ message.tags }}">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
         <div class="form-box">
             <div class="wrapper">
                 <h1>Login</h1> <br> 

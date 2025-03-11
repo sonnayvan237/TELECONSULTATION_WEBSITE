@@ -19,7 +19,7 @@
             <!-- Partie du corps -->
             <div class="mb-3">
                 <label for="id_body_part" class="form-label">Partie du corps affectée</label>
-                <select name="body_part" class="form-control" id="id_body_part" onchange="this.form.submit()">
+                <select name="body_part" class="form-control" id="body-part-selector">
                     <option value="">Sélectionnez...</option>
                     {% for value, label in form.body_part.field.choices %}
                         <option value="{{ value }}" {% if value == selected_body_part %}selected{% endif %}>{{ label }}</option>
@@ -30,7 +30,7 @@
           <!-- Symptômes -->
             <div class="mb-3">
                 <label class="form-label">Symptômes</label>
-                <div class="symptom-list">
+                <div class="symptom-list" id="symptom-container" >
                     {% for value, label in form.symptom.field.choices %}
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="symptom" value="{{ value }}" id="symptom_{{ value }}">
@@ -78,7 +78,6 @@
                 <div id="selected-symptoms" class="p-2 border rounded bg-light"></div>
             </div>
 
-
             <button type="submit" class="btn btn-primary w-100">Soumettre</button>
         </form>
     </div>
@@ -92,50 +91,103 @@
         });
 
         document.addEventListener("DOMContentLoaded", function () {
-        const selectedSymptomsDiv = document.getElementById("selected-symptoms");
-        const symptomCheckboxes = document.querySelectorAll('input[name="symptom"]');
-        
-        // Fonction pour mettre à jour l'affichage des symptômes sélectionnés
-        function updateSelectedSymptoms() {
-            let selectedSymptoms = JSON.parse(localStorage.getItem("selectedSymptoms")) || [];
+            const selectedSymptomsDiv = document.getElementById("selected-symptoms");
+            const symptomContainer = document.getElementById("symptom-container");
+            const bodyPartSelector = document.getElementById("body-part-selector");
 
-            // Efface la div avant de la remplir
-            selectedSymptomsDiv.innerHTML = selectedSymptoms.length 
-                ? selectedSymptoms.join(", ") 
-                : "<em>Aucun symptôme sélectionné</em>";
-        }
+            // Nettoyer le localStorage au rechargement de la page
+            localStorage.removeItem("selectedSymptoms");
 
-        // Charger les symptômes sélectionnés au rechargement de la page
-        updateSelectedSymptoms();
+            // Récupérer les symptômes sélectionnés depuis le localStorage
+            let selectedSymptoms = JSON.parse(localStorage.getItem("selectedSymptoms")) || {};
 
-        // Écoute les changements sur les checkboxes de symptômes
-        symptomCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener("change", function () {
-                let selectedSymptoms = JSON.parse(localStorage.getItem("selectedSymptoms")) || [];
+            function updateSelectedSymptoms() {
+                let allSelectedSymptoms = [];
 
-                if (this.checked) {
-                    // Ajouter le symptôme si coché
-                    if (!selectedSymptoms.includes(this.value)) {
-                        selectedSymptoms.push(this.value);
+                // Mettre à jour la liste des symptômes sélectionnés
+                document.querySelectorAll('input[name="symptom"]:checked').forEach(checkbox => {
+                    let symptom = checkbox.value;
+                    let bodyPart = bodyPartSelector.value;
+
+                    // Ajouter au stockage
+                    if (!selectedSymptoms[bodyPart]) {
+                        selectedSymptoms[bodyPart] = [];
                     }
-                } else {
-                    // Supprimer le symptôme si décoché
-                    selectedSymptoms = selectedSymptoms.filter(symptom => symptom !== this.value);
+
+                    if (!selectedSymptoms[bodyPart].includes(symptom)) {
+                        selectedSymptoms[bodyPart].push(symptom);
+                    }
+                });
+
+                // Récupérer tous les symptômes stockés
+                for (let part in selectedSymptoms) {
+                    allSelectedSymptoms = allSelectedSymptoms.concat(selectedSymptoms[part]);
                 }
 
-                // Sauvegarde dans le localStorage
-                localStorage.setItem("selectedSymptoms", JSON.stringify(selectedSymptoms));
+                // Afficher les symptômes sélectionnés
+                selectedSymptomsDiv.innerHTML = allSelectedSymptoms.length
+                    ? allSelectedSymptoms.join(", ")
+                    : "<em>Aucun symptôme sélectionné</em>";
 
-                // Mise à jour de l'affichage
+                // Sauvegarder les symptômes dans localStorage
+                localStorage.setItem("selectedSymptoms", JSON.stringify(selectedSymptoms));
+            }
+
+            // Charger les symptômes sélectionnés pour la partie du corps actuelle
+            function restoreSelectedSymptoms() {
+                let bodyPart = bodyPartSelector.value;
+
+                if (selectedSymptoms[bodyPart]) {
+                    selectedSymptoms[bodyPart].forEach(symptom => {
+                        let checkbox = document.querySelector(`input[name="symptom"][value="${symptom}"]`);
+                        if (checkbox) {
+                            checkbox.checked = true;
+                        }
+                    });
+                }
+
                 updateSelectedSymptoms();
+            }
+
+            // Gestion du changement de partie du corps
+            bodyPartSelector.addEventListener("change", function () {
+                let selectedBodyPart = this.value;
+
+                if (selectedBodyPart) {
+                    $.ajax({
+                        url: "{% url 'update_symptoms' %}",
+                        type: "GET",
+                        data: { body_part: selectedBodyPart },
+                        success: function (response) {
+                            symptomContainer.innerHTML = response.html;
+
+                            // Ajouter les événements aux nouvelles cases à cocher
+                            document.querySelectorAll('input[name="symptom"]').forEach(checkbox => {
+                                checkbox.addEventListener("change", updateSelectedSymptoms);
+                            });
+
+                            // Restaurer les symptômes déjà sélectionnés
+                            restoreSelectedSymptoms();
+                        }
+                    });
+                } else {
+                    symptomContainer.innerHTML = "<em>Veuillez sélectionner une partie du corps.</em>";
+                }
+            });
+
+            // Détecter les changements sur les checkboxes
+            document.addEventListener("change", function (event) {
+                if (event.target.matches('input[name="symptom"]')) {
+                    updateSelectedSymptoms();
+                }
+            });
+
+            // Supprimer les symptômes après soumission
+            document.querySelector("form").addEventListener("submit", function () {
+                localStorage.removeItem("selectedSymptoms");
             });
         });
 
-        // Nettoyer les symptômes sélectionnés lorsqu'on soumet le formulaire
-        document.querySelector("form").addEventListener("submit", function () {
-            localStorage.removeItem("selectedSymptoms");
-        });
-    });
     </script>
 </body>
 </html>

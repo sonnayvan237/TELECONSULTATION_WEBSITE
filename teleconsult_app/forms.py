@@ -99,6 +99,31 @@ SYMPTOM_CATEGORIES = {
     ]
 }
 
+# Définition des choix basés sur les valeurs uniques extraites
+CHRONIC_DISEASES_CHOICES = [('', 'Sélectionnez...')] + [(d, d) for d in [
+    'Arthrite rhumatoïde', 'Asthme', 'Diabète de type 2', 'Hypertension artérielle',
+    'Hypothyroïdie', 'Insuffisance cardiaque', 'Maladie de Crohn', 'Maladie de Parkinson',
+    'Maladie pulmonaire obstructive chronique', 'Sclérose en plaques', 'Aucun(e)'
+]]
+
+MEDICATIONS_CHOICES = [('', 'Sélectionnez...')] + [(m, m) for m in [
+    'Amiodarone', 'Aspirine', 'Atorvastatine', 'Ibuprofène', 'Insuline', 'Levothyroxine',
+    'Losartan', 'Metformine', 'Prednisone', 'Salbutamol', 'Aucun(e)'
+]]
+
+ALLERGIES_CHOICES = [('', 'Sélectionnez...')] + [(a, a) for a in [
+    'Allergie au latex', 'Allergie aux acariens', 'Allergie aux antibiotiques', 'Allergie aux arachides',
+    'Allergie aux fruits de mer', 'Allergie aux œufs', 'Allergie aux pollens',
+    'Allergie aux produits laitiers', 'Aucune allergie connue', 'Aucun(e)'
+]]
+
+FAMILY_HISTORY_CHOICES = [('', 'Sélectionnez...')] + [(f, f) for f in [
+    'Antécédents d’AVC', 'Antécédents d’asthme', 'Antécédents de cancer',
+    'Antécédents de diabète', 'Antécédents de maladies auto-immunes',
+    'Antécédents de maladies cardiovasculaires', 'Antécédents d’hypertension',
+    'Antécédents d’insuffisance rénale', 'Aucun antécédent médical connu', 'Aucun(e)'
+]]
+
 
 class MedicalForm(forms.Form):
     age = forms.IntegerField(label="Âge", min_value=0, max_value=120, required=True, widget=forms.NumberInput(attrs={'class': 'form-control'}))
@@ -118,21 +143,45 @@ class MedicalForm(forms.Form):
         widget=forms.Select(attrs={'class': 'form-control'})
     )
 
-    chronic_diseases = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 2}), label="Maladies chroniques (si applicable)", required=False)
-    medications = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 2}), label="Médicaments en cours", required=False)
+    chronic_diseases = forms.ChoiceField(
+        choices=CHRONIC_DISEASES_CHOICES, 
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        label="Maladies chroniques",
+        required=False
+    )
+    
+    medications = forms.ChoiceField(
+        choices=MEDICATIONS_CHOICES, 
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        label="Médicaments en cours",
+        required=False
+    )
+
     lifestyle = forms.ChoiceField(label="Mode de vie", choices=[('active', 'Actif'), ('sedentary', 'Sédentaire')], required=True, widget=forms.Select(attrs={'class': 'form-control'}))
     smoking = forms.ChoiceField(label="Fumeur", choices=[('yes', 'Oui'), ('no', 'Non')], required=True, widget=forms.Select(attrs={'class': 'form-control'}))
     alcohol = forms.ChoiceField(label="Consommation d'alcool", choices=[('yes', 'Oui'), ('no', 'Non')], required=True, widget=forms.Select(attrs={'class': 'form-control'}))
-    allergies = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 2}), label="Allergies (si applicable)", required=False)
-    family_history = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 2}), label="Antécédents familiaux de maladies", required=False)
+
+    allergies = forms.ChoiceField(
+        choices=ALLERGIES_CHOICES, 
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        label="Allergies",
+        required=False
+    )
+    
+    family_history = forms.ChoiceField(
+        choices=FAMILY_HISTORY_CHOICES, 
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        label="Antécédents familiaux de maladies",
+        required=False
+    )
+    
     geographic_zone = forms.ChoiceField(label="Zone géographique", choices=GEOGRAPHIC_ZONES, required=True, widget=forms.Select(attrs={'class': 'form-control'}))
 
     def __init__(self, *args, **kwargs):
-        """Permet de filtrer les symptômes en fonction de la partie du corps sélectionnée"""
         selected_body_part = kwargs.pop('selected_body_part', None)
         super().__init__(*args, **kwargs)
         
-        # Si une partie du corps est sélectionnée, on met à jour les choix de symptômes
+        # Mise à jour dynamique des symptômes
         if selected_body_part and selected_body_part in SYMPTOM_CATEGORIES:
             self.fields['symptom'].choices = [(s, s) for s in SYMPTOM_CATEGORIES[selected_body_part]]
         else:

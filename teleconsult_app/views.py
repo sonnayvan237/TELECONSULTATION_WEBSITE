@@ -725,16 +725,35 @@ def medecin_consultations(request):
 
 def diagnostic_view(request):
     selected_body_part = None
+    selected_symptoms = []  # Initialisation de la variable pour éviter l'erreur
 
     if request.method == "POST":
-        selected_body_part = request.POST.get("body_part")  # Récupère la partie du corps sélectionnée
+        selected_body_part = request.POST.get("body_part")
+        selected_symptoms = request.POST.getlist("symptom")  # Récupère les symptômes sélectionnés
+
         form = MedicalForm(request.POST, selected_body_part=selected_body_part)
-        
+
         if form.is_valid():
-            return render(request, 'result.html', {'data': form.cleaned_data})
-    
+            return render(request, 'result.html', {'data': form.cleaned_data, 'selected_symptoms': selected_symptoms})
+
     else:
-        form = MedicalForm()
+        form = MedicalForm(selected_body_part=selected_body_part)
 
-    return render(request, 'questionnaire.html', {'form': form, 'selected_body_part': selected_body_part})
+    return render(request, 'questionnaire.html', {
+        'form': form,
+        'selected_body_part': selected_body_part,
+        'selected_symptoms': selected_symptoms
+    })
 
+
+from django.http import JsonResponse
+from django.template.loader import render_to_string
+def update_symptoms(request):
+    body_part = request.GET.get("body_part", None)
+    symptoms = SYMPTOM_CATEGORIES.get(body_part, [])  # Récupérer les symptômes associés
+
+    html = render_to_string("partials/symptom_list.html", {"symptoms": symptoms})
+
+    print(f"Symptômes pour {body_part}:", symptoms)
+
+    return JsonResponse({"html": html})

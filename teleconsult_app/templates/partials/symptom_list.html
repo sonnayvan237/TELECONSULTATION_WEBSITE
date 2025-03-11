@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% for symptom in symptoms %}
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="symptom" value="{{ symptom }}" id="symptom_{{ symptom }}">
+            <label class="form-check-label" for="symptom_{{ symptom }}">{{ symptom }}</label>
+        </div>
+    {% empty %}
+        <em>Aucun symptôme disponible pour cette partie du corps.</em>
+    {% endfor %}
+</body>
+</html>

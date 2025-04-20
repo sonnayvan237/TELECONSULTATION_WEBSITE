@@ -8,7 +8,17 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required,user_passes_test
 from django.utils import timezone
 import re
+import torch
+import requests
+from transformers import AutoModelForSequenceClassification, AutoTokenizer
+from django.conf import settings
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 
+# Charger le modèle et le tokenizer
+MODEL_NAME = "sonnayvan237/medical_diagnostic_IA"
+tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME)
 
 def admin_required(user):
     return user.is_superuser
@@ -722,32 +732,82 @@ def medecin_consultations(request):
     return render(request, 'medecin_consultations.html', {'consultations': consultations, 'medecin': medecin})
 
 
+def predict_disease(symptoms, geographic_zone, family_history, allergies, alcohol, smoking, lifestyle, medications, chronic_diseases, gender, age):
+    """
+    Prend les entrées utilisateur et prédit les maladies possibles par ordre décroissant de probabilité.
+    """
 
+    # Formatage du texte d'entrée
+    input_text = f"Symptômes: {', '.join(symptoms)}; Zone: {geographic_zone}; Antécédents familiaux: {family_history}; "
+    input_text += f"Allergies: {allergies}; Alcool: {alcohol}; Fumeur: {smoking}; Mode de vie: {lifestyle}; "
+    input_text += f"Médicaments: {medications}; Maladies chroniques: {chronic_diseases}; Sexe: {gender}; Âge: {age}"
+
+    # Tokenization
+    inputs = tokenizer(input_text, return_tensors="pt", truncation=True, padding=True)
+
+    # Prédiction
+    model.eval()
+    with torch.no_grad():
+        outputs = model(**inputs)
+        probabilities = torch.nn.functional.softmax(outputs.logits, dim=-1).squeeze()
+
+    # Liste des maladies du modèle
+    LABELS = ["Bilharziose", "Dépression", "Hépatite B", "Covid-19", "Fièvre typhoïde", "Gastro-entérite", "Migraine", "Grippe", "Méningite", "Dengue", "Choléra", "Arthrite", "Rougeole", "Hypertension", "Tuberculose", "Arthrite rhumatoïde", "Syndrome de Lyme", "Sclérose en plaques", "Épilepsie", "Malaria", "Lupus", "Insuffisance cardiaque"]
+
+    # Associer chaque maladie à sa probabilité
+    disease_probabilities = list(zip(LABELS, probabilities.tolist()))
+
+    # Trier les maladies par ordre décroissant de probabilité
+    sorted_diseases = sorted(disease_probabilities, key=lambda x: x[1], reverse=True)
+
+    return sorted_diseases[:4]  # Retourne une liste de tuples (nom de maladie, probabilité)
+
+@login_required
 def diagnostic_view(request):
     selected_body_part = None
-    selected_symptoms = []  # Initialisation de la variable pour éviter l'erreur
+    selected_symptoms = []
 
     if request.method == "POST":
         selected_body_part = request.POST.get("body_part")
-        selected_symptoms = request.POST.getlist("symptom")  # Récupère les symptômes sélectionnés
+
+        # 🔹 Récupérer TOUS les symptômes sélectionnés (depuis le champ caché)
+        all_selected_symptoms = request.POST.get("all_selected_symptoms", "").split(",")
 
         form = MedicalForm(request.POST, selected_body_part=selected_body_part)
 
         if form.is_valid():
-            return render(request, 'result.html', {'data': form.cleaned_data, 'selected_symptoms': selected_symptoms})
+            data = form.cleaned_data
+            sorted_diseases = predict_disease(
+                symptoms=all_selected_symptoms,  # 🔹 On passe la liste complète des symptômes
+                geographic_zone=data["geographic_zone"],
+                family_history=data["family_history"],
+                allergies=data["allergies"],
+                alcohol=data["alcohol"],
+                smoking=data["smoking"],
+                lifestyle=data["lifestyle"],
+                medications=data["medications"],
+                chronic_diseases=data["chronic_diseases"],
+                gender=data["gender"],
+                age=data["age"]
+            )
+
+            return render(request, "result.html", {
+                "data": data,
+                "selected_symptoms": all_selected_symptoms,
+                "sorted_diseases": sorted_diseases
+            })
 
     else:
         form = MedicalForm(selected_body_part=selected_body_part)
 
-    return render(request, 'questionnaire.html', {
-        'form': form,
-        'selected_body_part': selected_body_part,
-        'selected_symptoms': selected_symptoms
+    return render(request, "questionnaire.html", {
+        "form": form,
+        "selected_body_part": selected_body_part,
+        "selected_symptoms": selected_symptoms
     })
 
 
-from django.http import JsonResponse
-from django.template.loader import render_to_string
+
 def update_symptoms(request):
     body_part = request.GET.get("body_part", None)
     symptoms = SYMPTOM_CATEGORIES.get(body_part, [])  # Récupérer les symptômes associés

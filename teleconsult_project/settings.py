@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 
-SESSION_COOKIE_AGE = 600  # Expire après 5 minutes (300 secondes)
+SESSION_COOKIE_AGE = 1200  # Expire après 5 minutes (300 secondes)
 SESSION_SAVE_EVERY_REQUEST = True  # Renouvelle la session à chaque requête
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.

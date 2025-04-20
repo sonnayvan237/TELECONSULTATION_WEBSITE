@@ -78,7 +78,11 @@
                 <div id="selected-symptoms" class="p-2 border rounded bg-light"></div>
             </div>
 
+            <!-- 🔹 Champ caché qui stockera tous les symptômes sélectionnés -->
+            <input type="hidden" name="all_selected_symptoms" id="all_selected_symptoms">
+
             <button type="submit" class="btn btn-primary w-100">Soumettre</button>
+
         </form>
     </div>
 
@@ -92,24 +96,19 @@
 
         document.addEventListener("DOMContentLoaded", function () {
             const selectedSymptomsDiv = document.getElementById("selected-symptoms");
+            const hiddenSymptomsInput = document.getElementById("all_selected_symptoms");
             const symptomContainer = document.getElementById("symptom-container");
             const bodyPartSelector = document.getElementById("body-part-selector");
 
-            // Nettoyer le localStorage au rechargement de la page
-            localStorage.removeItem("selectedSymptoms");
-
-            // Récupérer les symptômes sélectionnés depuis le localStorage
             let selectedSymptoms = JSON.parse(localStorage.getItem("selectedSymptoms")) || {};
 
             function updateSelectedSymptoms() {
                 let allSelectedSymptoms = [];
 
-                // Mettre à jour la liste des symptômes sélectionnés
                 document.querySelectorAll('input[name="symptom"]:checked').forEach(checkbox => {
                     let symptom = checkbox.value;
                     let bodyPart = bodyPartSelector.value;
 
-                    // Ajouter au stockage
                     if (!selectedSymptoms[bodyPart]) {
                         selectedSymptoms[bodyPart] = [];
                     }
@@ -119,17 +118,16 @@
                     }
                 });
 
-                // Récupérer tous les symptômes stockés
                 for (let part in selectedSymptoms) {
                     allSelectedSymptoms = allSelectedSymptoms.concat(selectedSymptoms[part]);
                 }
 
-                // Afficher les symptômes sélectionnés
                 selectedSymptomsDiv.innerHTML = allSelectedSymptoms.length
                     ? allSelectedSymptoms.join(", ")
                     : "<em>Aucun symptôme sélectionné</em>";
 
-                // Sauvegarder les symptômes dans localStorage
+                hiddenSymptomsInput.value = allSelectedSymptoms.join(","); // Met à jour le champ caché
+
                 localStorage.setItem("selectedSymptoms", JSON.stringify(selectedSymptoms));
             }
 

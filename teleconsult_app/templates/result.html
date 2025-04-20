@@ -1,20 +1,25 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang=\"fr\">
+<html lang="en">
 <head>
-    <meta charset=\"UTF-8\">
-    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Résultats du Diagnostic</title>
-    <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css\">
+    <link rel="stylesheet" href="{% static 'css/result.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
-    <div class=\"container\">
-        <h2 class=\"text-center mb-4\">Résultats du Diagnostic</h2>
-        <ul class=\"list-group\">
-            {% for key, value in data.items %}
-                <li class=\"list-group-item\"><strong>{{ key }}:</strong> {{ value }}</li>
+    <div class="container">
+        <h2>Résultats du Diagnostic</h2>
+
+        <p><strong>Symptômes sélectionnés :</strong> {{ selected_symptoms|join:", " }}</p>
+
+        <h3>Maladies les plus probables :</h3>
+        <ul>
+            {% for disease, probability in sorted_diseases %}
+                <li>{{ disease }} - {{ probability|floatformat:2 }}%</li>
             {% endfor %}
         </ul>
-        <a href=\"/\" class=\"btn btn-secondary w-100 mt-3\">Revenir au formulaire</a>
     </div>
 </body>
 </html>
